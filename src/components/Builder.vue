@@ -24,26 +24,16 @@ function onRotate() {
     num.value++
 }
 
-const images = ref([
-  {
-    name: 'image39.png'
-  },
-  {
-    name: 'image40.png'
-  },
-  {
-    name: 'image41.png'
-  },
-  {
-    name: 'image43.png'
-  },
-  {
-    name: 'image44.png'
-  },
-  {
-    name: 'image45.png'
-  }
-]);
+const images = [];
+for (let index = 0; index < 86; index++) {
+    if (index != 28) {
+        const element = 'image'+index+'.png';
+        images.push(element) 
+    }
+}
+
+const items = ref(images);
+
 </script>
 
 <template>
@@ -51,24 +41,23 @@ const images = ref([
     <div class="container">
         <div class="d-flex">
             
-            <div class="aside">
-                <div class="row">
-                    <h5 class="fw-bold">Tools:</h5>
-                    
-                </div>
+            <div class="row">
+                <h5 class="fw-bold">Tools:</h5>
+            </div>
+            <div class="aside" >
 
                 <div class="row">
-                    <div class="col-md-6" v-for="image in images">
+                    <div class="col-md-6" v-for="image in items">
                         <VueDragResize
                         :is-active="false"
                         :w="200"
-                        :h="200"
-                        contentClass="transform-rotate"
+                        :h="140"
+                        style="position: relative;"
                         class="bg-primary-100 dark:bg-gray-800"
                         @resizing="dragResize"
                         @dragging="dragResize"
                         >
-                            <img :src="`media/`+image.name" alt="" class="w-50">
+                            <img :src="`media/`+image" alt="" class="w-50">
                         </VueDragResize>
                     </div>
                 </div>
@@ -76,7 +65,7 @@ const images = ref([
     
             <div class="content">
                 <div class="canvas">
-                            <img src="/media/image28.png" alt="" style="width: 400px">
+                    <img src="/media/image28.png" alt="" style="width: 400px">
                 </div>
             </div>
         </div>
@@ -91,6 +80,7 @@ const images = ref([
     left: 0;
     width: 250px;
     height: 500px;
+    position: relative;
 }
 
 .content {
