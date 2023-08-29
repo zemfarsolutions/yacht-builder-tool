@@ -7,14 +7,19 @@ const height = ref(0)
 const top = ref(0)
 const left = ref(0)
 const num = ref(0)
-const checkImages = ref([]);
+const checkImages = ref([{
+        path: 'image1.png'
+    }]);
+const checkedImages = ref([]);
+const result = ref([{
+        path: 'image1.png'
+    }]);
 
 const rotate = computed(function() {
     return `rotate(${num.value}deg)`
 })
 
 function dragResize(newRect) {
-    console.log(newRect)
     width.value = newRect.width
     height.value = newRect.height
     top.value = newRect.top
@@ -22,14 +27,59 @@ function dragResize(newRect) {
 }
 
 function check(e) {
-    console.log(checkImages.value);
+    
+    for (let index = 0; index < checkImages.value.length; index++) {
+
+        const check = checkedImages.value.includes(checkImages.value[index]);
+        
+        if (!check) {
+
+            const obj = {
+                path: checkImages.value[index]
+            }
+
+            checkedImages.value.push(obj)
+
+            var props = ['path'];
+        
+            console.log(checkedImages.value)
+
+            result.value = checkImages.value.filter(function(o1){
+
+                // filter out (!) items in result2
+                return !checkedImages.value.some(function(o2){
+                    return o1.path === o2.path;          // assumes unique id
+                });
+
+            }).map(function(o){
+
+                // use reduce to make objects with only the required properties
+                // and map to apply this to the filtered array as a whole
+                return props.reduce(function(newo, path){
+                    newo[path] = o[path];
+                    return newo;
+                }, {});
+
+            });
+        }
+    } 
+
+    console.log(result.value)
 }
 
+
 const images = [];
+
 for (let index = 0; index < 86; index++) {
+
     if (index != 28 && index != 0) {
-        const element = 'image'+index+'.png';
-        images.push(element) 
+
+        const img = {
+            path: 'image'+index+'.png'
+        }
+
+        images.push(img) 
+
     }
 }
 
@@ -54,12 +104,14 @@ const items = ref(images);
                     <div class="col-md-6 image-container" v-for="(image, index) in items" :key="index">
                         
                         <input type="checkbox" 
-                        :id="`dessert-`+index" 
+                        :id="`dessert-`+index"
+                        :value="image"
+                        :disabled="image.path == 'image1.png'"
                         v-model="checkImages"
                         @change="check($event)"/>
 
                         <label :for="`dessert-`+index">
-                            <img :src="`media/`+image" />
+                            <img :src="`media/`+image.path" />
                         </label>
                     </div>
 
@@ -74,19 +126,18 @@ const items = ref(images);
                 </div>
 
                 <div class="row"> 
-                    <div class="col-md-6" v-for="(image, index) in items" :key="index">
+                    <div class="col-md-6" v-for="(image, index) in result" :key="index">
                         
                         <VueDragResize
                         :is-active="false"
                         :w="100"
                         :h="90"
-                        v-if="image == 'image1.png'"
                         style="position: relative;"
                         class="bg-primary-100 dark:bg-gray-800"
                         @resizing="dragResize"
                         @dragging="dragResize"
                         >
-                            <img :src="`media/`+image" alt="" class="w-50">
+                            <img :src="`media/`+image.path" alt="" class="w-50">
                         </VueDragResize>
 
                     </div>
@@ -161,7 +212,7 @@ input[type="checkbox"]:checked:after {
 
 .content {
     height: 500px;
-    width: 1000px;
+    width: 900px;
     padding: 30px;
     background-color: skyblue;
 }
