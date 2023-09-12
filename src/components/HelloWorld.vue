@@ -6,6 +6,19 @@ defineProps({
   }
 })
 
+import VueDragResize from 'vue3-drag-resize'
+
+const width = ref(0)
+const height = ref(0)
+const top = ref(0)
+const left = ref(0)
+
+function dragResize(newRect) {
+    width.value = newRect.width
+    height.value = newRect.height
+    top.value = newRect.top
+    left.value = newRect.left
+}
 const num = ref(0)
 const checkImages = ref([{
         path: 'image1.png'

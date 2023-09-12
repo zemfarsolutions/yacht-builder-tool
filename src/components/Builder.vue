@@ -1,18 +1,5 @@
 <script setup>
-import { computed, ref, watch } from 'vue';
-import VueDragResize from 'vue3-drag-resize'
-
-const width = ref(0)
-const height = ref(0)
-const top = ref(0)
-const left = ref(0)
-
-function dragResize(newRect) {
-    width.value = newRect.width
-    height.value = newRect.height
-    top.value = newRect.top
-    left.value = newRect.left
-}
+import { ref, useAttrs, watch } from 'vue';
 
 const draggables = ref([
     {
@@ -54,7 +41,8 @@ const productList = [
         capacity: 10,
         size: '4x3m',
         anchors: 3,
-        cost: 4995
+        cost: 4995,
+        count: ref(0)
     },
     {
         id: 2,
@@ -63,7 +51,8 @@ const productList = [
         capacity: 8,
         size: '5x3m',
         anchors: 5,
-        cost: 5199
+        cost: 5199,
+        count: ref(0)
     },
     {
         id: 3,
@@ -72,7 +61,8 @@ const productList = [
         capacity: 5,
         size: '3x2m',
         anchors: 2,
-        cost: 3144
+        cost: 3144,
+        count: ref(0)
     },
     {
         id: 4,
@@ -81,7 +71,8 @@ const productList = [
         capacity: 6,
         size: '4x2m',
         anchors: 3,
-        cost: 2599
+        cost: 2599,
+        count: ref(0)
     },
     {
         id: 5,
@@ -90,7 +81,8 @@ const productList = [
         capacity: 7,
         size: '1.4x1m',
         anchors: 4,
-        cost: 4122
+        cost: 4122,
+        count: ref(0)
     },
     {
         id: 6,
@@ -99,7 +91,8 @@ const productList = [
         capacity: 7,
         size: '5x4m',
         anchors: 4,
-        cost: 4122
+        cost: 4122,
+        count: ref(0)
     },
     {
         id: 7,
@@ -108,7 +101,8 @@ const productList = [
         capacity: 7,
         size: '2x2m',
         anchors: 4,
-        cost: 4122
+        cost: 4122,
+        count: ref(0)
     }
 ];
 
@@ -136,10 +130,13 @@ function hideProductDetail(val) {
     cardDetail.value = false;
 }
 
+// onClick add item into cart
 function addToCart(val) {
+    val.count.value++
     cart.value.push(val);
 }
 
+// dynamic cart items
 const cart = ref([
 ])
 
@@ -147,9 +144,10 @@ const cartCost = ref(0);
 const cartAnchor = ref(0);
 const cartCapacity = ref(0);
 
+// live summary info update
 watch(
   () => cart,
-  (newValue, oldValue) => {
+  (newValue, oldValue) => {    
         cartCost.value = newValue.value.reduce((sum, item) => {
             return sum + item.cost
         }, 0);
@@ -164,6 +162,44 @@ watch(
   },
   { deep: true }
 )
+
+const top = ref(0)
+const left = ref(0)
+const draggable = ref(null)
+
+function mousedown (e, index) {
+
+    window.addEventListener('mousemove', mousemove)
+    window.addEventListener('mouseup', mouseup)
+
+    let prevX = e.clientX
+    let prevY = e.clientY
+    let currentIndex = index;
+
+    function mousemove (e) {
+        // new x - where is the mouse now
+        const newX = prevX - e.clientX
+        const newY = prevY - e.clientY
+        const dom = draggable.value;
+        
+        console.log(currentIndex)
+        const rect = dom[currentIndex].getBoundingClientRect()
+
+        dom[currentIndex].style.position = 'absolute';
+        dom[currentIndex].style.zIndex = 1000;
+
+        dom[currentIndex].style.left = rect.left - newX + 'px'
+        dom[currentIndex].style.top = rect.top - newY + 'px'
+        prevX = e.clientX
+        prevY = e.clientY
+    }
+
+    function mouseup () { // remove event listener
+        window.removeEventListener('mousemove', mousemove)
+        window.removeEventListener('mouseup', mouseup)
+    }
+}
+
 </script>
 
 <template>
@@ -242,6 +278,9 @@ watch(
                     class="card mt-2">
                         <div class="card-img">
                             <img :src="`media/`+product.path" class="card-img-top" alt="...">
+                            <span v-if="product.count.value > 0" class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-danger mt-1">
+                                {{ product.count.value }}
+                            </span>
                         </div>
                         <div class="card-body">
                             <h5 class="card-title">{{ product.name }}</h5>
@@ -308,15 +347,12 @@ watch(
         </div>
 
         <div class="draggableItems">
-            <div class="draggableItem" v-for="draggable in draggables">
-                <VueDragResize 
-                :w="180" 
-                :h="120" 
-                v-on:resizing="dragResize" 
-                v-on:dragging="dragResize"
-                :isResizable="false">
-                    <img :src="`media/`+draggable.path" class="w-50" alt="">
-                </VueDragResize>
+            <div class="draggableItem" 
+            ref="draggable"
+            v-for="(draggable, index) in cart"
+            @mousedown="mousedown($event, index)"
+            >
+                <img :src="`media/`+draggable.path" class="w-50" alt="" srcset="">
             </div>
         </div>
     </div>
@@ -330,6 +366,13 @@ watch(
     margin-top: 5px;
     margin: 0;
 }
+
+.draggableItem {
+    position: absolute;
+    color: #fff;
+    cursor: move;
+}
+
 
 .card-img-top{
     width: 135px;
@@ -381,7 +424,8 @@ watch(
     font-family:sans-serif;
     font-weight: bold;
     font-size: 13px;
-    z-index: 9999;
+    z-index: auto;
+    position: absolute;
     right: 450px;
     float: right;
     margin-top: 315px;
