@@ -1,17 +1,6 @@
 <script setup>
 import { ref, useAttrs, watch } from 'vue';
 
-const draggables = ref([
-    {
-        id: 1,
-        path: 'image39.png'
-    },
-    {
-        id: 3,
-        path: 'image41.png'
-    }
-]);
-
 const products = ref(true);
 const summary = ref(false);
 const currentTab = ref(0);
@@ -42,6 +31,7 @@ const productList = [
         size: '4x3m',
         anchors: 3,
         cost: 4995,
+        rotate: ref(0),
         count: ref(0)
     },
     {
@@ -52,6 +42,7 @@ const productList = [
         size: '5x3m',
         anchors: 5,
         cost: 5199,
+        rotate: ref(0),
         count: ref(0)
     },
     {
@@ -62,6 +53,7 @@ const productList = [
         size: '3x2m',
         anchors: 2,
         cost: 3144,
+        rotate: ref(0),
         count: ref(0)
     },
     {
@@ -72,6 +64,7 @@ const productList = [
         size: '4x2m',
         anchors: 3,
         cost: 2599,
+        rotate: ref(0),
         count: ref(0)
     },
     {
@@ -82,6 +75,7 @@ const productList = [
         size: '1.4x1m',
         anchors: 4,
         cost: 4122,
+        rotate: ref(0),
         count: ref(0)
     },
     {
@@ -92,6 +86,7 @@ const productList = [
         size: '5x4m',
         anchors: 4,
         cost: 4122,
+        rotate: ref(0),
         count: ref(0)
     },
     {
@@ -102,6 +97,7 @@ const productList = [
         size: '2x2m',
         anchors: 4,
         cost: 4122,
+        rotate: ref(0),
         count: ref(0)
     }
 ];
@@ -164,27 +160,30 @@ watch(
 )
 
 const top = ref(0)
-const left = ref(0)
+const opacity = ref(0)
 const draggable = ref(null)
 
 function mousedown (e, index) {
 
     window.addEventListener('mousemove', mousemove)
     window.addEventListener('mouseup', mouseup)
-
+    
     let prevX = e.clientX
     let prevY = e.clientY
     let currentIndex = index;
-
+    const dom = draggable.value;
+    
+    dom[currentIndex].children[1].style.opacity == 0 ? dom[currentIndex].children[1].style.opacity = 1 : dom[currentIndex].children[1].style.opacity = 0
+    
     function mousemove (e) {
         // new x - where is the mouse now
         const newX = prevX - e.clientX
         const newY = prevY - e.clientY
-        const dom = draggable.value;
+      
+        console.log(dom)
         
-        console.log(currentIndex)
         const rect = dom[currentIndex].getBoundingClientRect()
-
+        
         dom[currentIndex].style.position = 'absolute';
         dom[currentIndex].style.zIndex = 1000;
 
@@ -198,6 +197,19 @@ function mousedown (e, index) {
         window.removeEventListener('mousemove', mousemove)
         window.removeEventListener('mouseup', mouseup)
     }
+}
+
+function removeCartItem(item, index) {
+    
+    item.count--
+
+    if(cart.value[index] === item) { 
+        cart.value.splice(index, 1)
+    } else {
+        let found = cart.value.indexOf(item)
+        cart.value.splice(found, 1)
+    }
+      
 }
 
 </script>
@@ -352,7 +364,18 @@ function mousedown (e, index) {
             v-for="(draggable, index) in cart"
             @mousedown="mousedown($event, index)"
             >
-                <img :src="`media/`+draggable.path" class="w-50" alt="" srcset="">
+                <img :src="`media/`+draggable.path" class="w-50" :style="{ transform: 'rotate('+ draggable.rotate+'deg)'}">
+                <div class="actions">
+                    <button class="btn btn-sm btn-light" @click="draggable.rotate += 60">
+                        <font-awesome-icon icon="arrow-rotate-forward"/>
+                    </button>
+                    <button class="btn btn-sm btn-light">
+                        <font-awesome-icon icon="arrow-rotate-backward" @click="draggable.rotate -= 60" />
+                    </button>
+                    <button class="btn btn-sm btn-light" @click="removeCartItem(draggable, index)">
+                        <font-awesome-icon icon="trash" />
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -371,6 +394,15 @@ function mousedown (e, index) {
     position: absolute;
     color: #fff;
     cursor: move;
+    display: flex;
+    align-items: center
+}
+
+.actions {
+    display: flex;
+    position: sticky;
+    flex-direction: column;
+    opacity: v-bind(opacity);
 }
 
 
