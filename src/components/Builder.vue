@@ -32,7 +32,7 @@ const productList = [
         size: '4x3m',
         anchors: 3,
         cost: 4995,
-        rotate: 0,
+        rotate: ref(0),
         count: ref(0)
     },
     {
@@ -43,7 +43,7 @@ const productList = [
         size: '5x3m',
         anchors: 5,
         cost: 5199,
-        rotate: 0,
+        rotate: ref(0),
         count: ref(0)
     },
     {
@@ -54,7 +54,7 @@ const productList = [
         size: '3x2m',
         anchors: 2,
         cost: 3144,
-        rotate: 0,
+        rotate: ref(0),
         count: ref(0)
     },
     {
@@ -65,7 +65,7 @@ const productList = [
         size: '4x2m',
         anchors: 3,
         cost: 2599,
-        rotate: 0,
+        rotate: ref(0),
         count: ref(0)
     },
     {
@@ -76,7 +76,7 @@ const productList = [
         size: '1.4x1m',
         anchors: 4,
         cost: 4122,
-        rotate: 0,
+        rotate: ref(0),
         count: ref(0)
     },
     {
@@ -87,7 +87,7 @@ const productList = [
         size: '5x4m',
         anchors: 4,
         cost: 4122,
-        rotate: 0,
+        rotate: ref(0),
         count: ref(0)
     },
     {
@@ -98,7 +98,7 @@ const productList = [
         size: '2x2m',
         anchors: 4,
         cost: 4122,
-        rotate: 0,
+        rotate: ref(0),
         count: ref(0)
     }
 ];
@@ -135,7 +135,7 @@ function addToCart(val) {
 
 // dynamic cart items
 const cart = ref([
-])
+])  
 
 const cartCost = ref(0);
 const cartAnchor = ref(0);
@@ -179,8 +179,6 @@ function mousedown (e, index) {
         // new x - where is the mouse now
         const newX = prevX - e.clientX
         const newY = prevY - e.clientY
-      
-        console.log(dom)
         
         const rect = dom[currentIndex].getBoundingClientRect()
         
@@ -213,44 +211,21 @@ function removeCartItem(item, index) {
 }
 
 function rotateComponent(item, index, action) {
-    console.log(cart.value[index])
+
     if (action == 'increment') {
         
-        cart.value[index].rotate += 60
+        let incrementRotation = draggableComponent.value[index].children[0].style.transform.match(/\d+/g)[0] += 60;
+        draggableComponent.value[index].children[0].style.transform = "rotate("+incrementRotation+"deg)";
     }
-
+    
     if (action == 'decrement') {
-        
-        cart.value[index].rotate -= 60
+
+        let incrementRotation = draggableComponent.value[index].children[0].style.transform.match(/\d+/g)[0] -= 60;
+        draggableComponent.value[index].children[0].style.transform = "rotate("+incrementRotation+"deg)";
     }
 }
 
 const printcontent = ref(null)
-
-async function saveImage(event) {
-    const el = printcontent;
-
-    const options = {
-        type: "dataURL",
-    };
-    console.log(el.value)
-    const printCanvas = await html2canvas(el.value, options);
-
-    const link = document.createElement("a");
-
-    link.setAttribute("download", "download.jpg");
-
-    link.setAttribute(
-        "href",
-        printCanvas
-        .toDataURL("image/jpg")
-        .replace("image/jpg", "image/octet-stream")
-    );
-    
-    link.click();
-
-    console.log("done");
-}
 
 function printThis() {
 
@@ -290,13 +265,15 @@ function printThis() {
                 </div>
 
                 <div class="draggableItems" ref="printcontent">
+                    
                     <img src="/media/image28.png" alt="" style="width: 400px;position: absolute;left: 200px;top: 235px;">
+                    
                     <div class="draggableItem" 
                     ref="draggableComponent"
                     v-for="(draggable, index) in cart"
                     @mousedown="mousedown($event, index)"
                     >
-                        <img :src="`media/`+draggable.path" class="w-100" :style="{ transform: 'rotate('+ draggable.rotate+'deg)'}">
+                        <img :src="`media/`+draggable.path" class="w-100" style="transform: rotate(0deg);">
                         <div class="actions">
                             <button class="btn btn-sm btn-light" @click="rotateComponent(draggable, index, 'increment')">
                                 <font-awesome-icon icon="arrow-rotate-forward"/>
@@ -309,6 +286,7 @@ function printThis() {
                             </button>
                         </div>
                     </div>
+
                 </div>
             </div> 
             
@@ -347,7 +325,6 @@ function printThis() {
                 </div>
             </transition>
 
-            
             <div v-show="products" class="row card-list">
                 <div class="col-md-4 cards-grid">
 
