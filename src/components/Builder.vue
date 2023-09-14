@@ -1,5 +1,6 @@
 <script setup>
-import { ref, useAttrs, watch } from 'vue';
+import { ref, watch } from 'vue';
+import html2pdf from "html2pdf.js";
 
 const products = ref(true);
 const summary = ref(false);
@@ -31,7 +32,7 @@ const productList = [
         size: '4x3m',
         anchors: 3,
         cost: 4995,
-        rotate: ref(0),
+        rotate: 0,
         count: ref(0)
     },
     {
@@ -42,7 +43,7 @@ const productList = [
         size: '5x3m',
         anchors: 5,
         cost: 5199,
-        rotate: ref(0),
+        rotate: 0,
         count: ref(0)
     },
     {
@@ -53,7 +54,7 @@ const productList = [
         size: '3x2m',
         anchors: 2,
         cost: 3144,
-        rotate: ref(0),
+        rotate: 0,
         count: ref(0)
     },
     {
@@ -64,7 +65,7 @@ const productList = [
         size: '4x2m',
         anchors: 3,
         cost: 2599,
-        rotate: ref(0),
+        rotate: 0,
         count: ref(0)
     },
     {
@@ -75,7 +76,7 @@ const productList = [
         size: '1.4x1m',
         anchors: 4,
         cost: 4122,
-        rotate: ref(0),
+        rotate: 0,
         count: ref(0)
     },
     {
@@ -86,7 +87,7 @@ const productList = [
         size: '5x4m',
         anchors: 4,
         cost: 4122,
-        rotate: ref(0),
+        rotate: 0,
         count: ref(0)
     },
     {
@@ -97,7 +98,7 @@ const productList = [
         size: '2x2m',
         anchors: 4,
         cost: 4122,
-        rotate: ref(0),
+        rotate: 0,
         count: ref(0)
     }
 ];
@@ -159,9 +160,8 @@ watch(
   { deep: true }
 )
 
-const top = ref(0)
 const opacity = ref(0)
-const draggable = ref(null)
+const draggableComponent = ref(null)
 
 function mousedown (e, index) {
 
@@ -171,7 +171,7 @@ function mousedown (e, index) {
     let prevX = e.clientX
     let prevY = e.clientY
     let currentIndex = index;
-    const dom = draggable.value;
+    const dom = draggableComponent.value;
     
     dom[currentIndex].children[1].style.opacity == 0 ? dom[currentIndex].children[1].style.opacity = 1 : dom[currentIndex].children[1].style.opacity = 0
     
@@ -212,6 +212,58 @@ function removeCartItem(item, index) {
       
 }
 
+function rotateComponent(item, index, action) {
+    console.log(cart.value[index])
+    if (action == 'increment') {
+        
+        cart.value[index].rotate += 60
+    }
+
+    if (action == 'decrement') {
+        
+        cart.value[index].rotate -= 60
+    }
+}
+
+const printcontent = ref(null)
+
+async function saveImage(event) {
+    const el = printcontent;
+
+    const options = {
+        type: "dataURL",
+    };
+    console.log(el.value)
+    const printCanvas = await html2canvas(el.value, options);
+
+    const link = document.createElement("a");
+
+    link.setAttribute("download", "download.jpg");
+
+    link.setAttribute(
+        "href",
+        printCanvas
+        .toDataURL("image/jpg")
+        .replace("image/jpg", "image/octet-stream")
+    );
+    
+    link.click();
+
+    console.log("done");
+}
+
+function printThis() {
+
+    var opt = {
+        margin:       1,
+        filename:     'canvas.pdf',
+        image:        { type: 'jpeg', quality: 0.98 },
+    };
+
+    html2pdf().set(opt).from(printcontent.value).save();
+    
+    html2pdf(printcontent.value, opt);
+}
 </script>
 
 <template>
@@ -226,58 +278,75 @@ function removeCartItem(item, index) {
 
     <div class="container">
         <div class="row">
-            <div class="col-md-9">
-                <div class="content">
-                    <div class="canvas">
-                        <img src="/media/image28.png" alt="" style="width: 400px;">
-                    </div>
+            
+            <div class="main">
+                <div class="menu">
+                    <button @click="changeMenu('products')" :class="currentTab === 0 ? `btn btn-outline-light text-secondary mx-2 btn-tab btn-tab-active` : 'btn btn-outline-light text-secondary mx-2 btn-tab'">
+                        Products
+                    </button>
+                    <button @click="changeMenu('summary')" :class="currentTab === 1 ? `btn btn-outline-light text-secondary mx-2 btn-tab btn-tab-active` : 'btn btn-outline-light text-secondary mx-2 btn-tab'">
+                        Summary
+                    </button>
                 </div>
-                
-                <transition name="fade">
-                    <div v-show="cardDetail" class="card mb-3 card-detail">
-                        <div class="row g-0">
-                            <div class="col-md-8">
-                                <div class="card-body" style="padding: 20px;">
-                                    <h5 class="card-title fw-bold">{{ productDetail.name }}</h5>
 
-                                    <div style="display: flow-root">
-                                        <p class="float-start">Capacity:</p>
-                                        <p class="float-end">{{ productDetail.capacity }}</p>
-                                    </div>
-
-                                    <div style="display: flow-root">
-                                        <p class="float-start">Size:</p>
-                                        <p class="float-end">{{ productDetail.size }}</p>
-                                    </div>
-
-                                    <div style="display: flow-root">
-                                        <p class="float-start">Anchors:</p>
-                                        <p class="float-end">{{ productDetail.anchors }}</p>
-                                    </div>
-
-                                    <div style="display: flow-root">
-                                        <p class="float-start">Cost:</p>
-                                        <p class="float-end">${{ productDetail.cost }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4 card-detail-image">
-                                <img :src="`media/`+productDetail.path" width="100" class="img-fluid rounded-start" alt="...">
-                            </div>
+                <div class="draggableItems" ref="printcontent">
+                    <img src="/media/image28.png" alt="" style="width: 400px;position: absolute;left: 200px;top: 235px;">
+                    <div class="draggableItem" 
+                    ref="draggableComponent"
+                    v-for="(draggable, index) in cart"
+                    @mousedown="mousedown($event, index)"
+                    >
+                        <img :src="`media/`+draggable.path" class="w-100" :style="{ transform: 'rotate('+ draggable.rotate+'deg)'}">
+                        <div class="actions">
+                            <button class="btn btn-sm btn-light" @click="rotateComponent(draggable, index, 'increment')">
+                                <font-awesome-icon icon="arrow-rotate-forward"/>
+                            </button>
+                            <button class="btn btn-sm btn-light">
+                                <font-awesome-icon icon="arrow-rotate-backward" @click="rotateComponent(draggable, index, 'decrement')" />
+                            </button>
+                            <button class="btn btn-sm btn-light" @click="removeCartItem(draggable, index)">
+                                <font-awesome-icon icon="trash" />
+                            </button>
                         </div>
                     </div>
-                </transition>
+                </div>
+            </div> 
+            
+            <transition name="fade">
+                <div v-show="cardDetail" class="card mb-3 card-detail">
+                    <div class="row g-0">
+                        <div class="col-md-8">
+                            <div class="card-body" style="padding: 20px;">
+                                <h5 class="card-title fw-bold">{{ productDetail.name }}</h5>
 
-            </div>
+                                <div style="display: flow-root">
+                                    <p class="float-start">Capacity:</p>
+                                    <p class="float-end">{{ productDetail.capacity }}</p>
+                                </div>
 
-            <div class="col-md-3">
-                <button @click="changeMenu('products')" :class="currentTab === 0 ? `btn btn-outline-light text-secondary mx-2 btn-tab btn-tab-active` : 'btn btn-outline-light text-secondary mx-2 btn-tab'">
-                    Products
-                </button>
-                <button @click="changeMenu('summary')" :class="currentTab === 1 ? `btn btn-outline-light text-secondary mx-2 btn-tab btn-tab-active` : 'btn btn-outline-light text-secondary mx-2 btn-tab'">
-                    Summary
-                </button>
-            </div>
+                                <div style="display: flow-root">
+                                    <p class="float-start">Size:</p>
+                                    <p class="float-end">{{ productDetail.size }}</p>
+                                </div>
+
+                                <div style="display: flow-root">
+                                    <p class="float-start">Anchors:</p>
+                                    <p class="float-end">{{ productDetail.anchors }}</p>
+                                </div>
+
+                                <div style="display: flow-root">
+                                    <p class="float-start">Cost:</p>
+                                    <p class="float-end">${{ productDetail.cost }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 card-detail-image">
+                            <img :src="`media/`+productDetail.path" width="100" class="img-fluid rounded-start" alt="...">
+                        </div>
+                    </div>
+                </div>
+            </transition>
+
             
             <div v-show="products" class="row card-list">
                 <div class="col-md-4 cards-grid">
@@ -351,30 +420,15 @@ function removeCartItem(item, index) {
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="card-footer d-flex justify-content-center border-0 bg-white">
+                                    <button class="btn btn-info text-white" style="font-weight: 500" @click="printThis()">
+                                        Print PDF
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="draggableItems">
-            <div class="draggableItem" 
-            ref="draggable"
-            v-for="(draggable, index) in cart"
-            @mousedown="mousedown($event, index)"
-            >
-                <img :src="`media/`+draggable.path" class="w-50" :style="{ transform: 'rotate('+ draggable.rotate+'deg)'}">
-                <div class="actions">
-                    <button class="btn btn-sm btn-light" @click="draggable.rotate += 60">
-                        <font-awesome-icon icon="arrow-rotate-forward"/>
-                    </button>
-                    <button class="btn btn-sm btn-light">
-                        <font-awesome-icon icon="arrow-rotate-backward" @click="draggable.rotate -= 60" />
-                    </button>
-                    <button class="btn btn-sm btn-light" @click="removeCartItem(draggable, index)">
-                        <font-awesome-icon icon="trash" />
-                    </button>
                 </div>
             </div>
         </div>
@@ -390,22 +444,37 @@ function removeCartItem(item, index) {
     margin: 0;
 }
 
+
+.draggableItems {
+    height: 550px;
+    background-color: skyblue;
+    width: 100%;
+    max-width: 800px;
+}
+
 .draggableItem {
     position: absolute;
     color: #fff;
     cursor: move;
     display: flex;
-    align-items: center
+    align-items: center;
+    width: 100px;
 }
 
 .actions {
     display: flex;
     position: sticky;
     flex-direction: column;
+    z-index: 9999;
     opacity: v-bind(opacity);
 }
 
-
+.menu {
+    z-index: 999;
+    display: flex;
+    justify-content: end;
+    float: right
+}
 .card-img-top{
     width: 135px;
     padding: 10px;
@@ -504,20 +573,6 @@ function removeCartItem(item, index) {
     transition: all 0.1s ease;
 }
 
-
-.content {
-    height: 550px;
-    background-color: skyblue;
-    width: 100%;
-    max-width: 800px;
-    position: absolute;
-    display: grid;
-    place-items: center center;
-}
-
-.canvas {
-    transform: rotate(180deg);
-}
 
 .transform-rotate{
     transform: v-bind(rotate)

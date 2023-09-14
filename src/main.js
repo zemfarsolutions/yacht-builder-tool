@@ -8,7 +8,6 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 import { faAnchor, faArrowAltCircleLeft, faArrowCircleLeft, faArrowRotateBackward, faArrowRotateForward, faDollar, faDroplet, faPerson, faPhone, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import VueSelectImage from 'vue-select-image'
-// add stylesheet
 import 'vue-select-image/dist/vue-select-image.css'
 
 const app = createApp(App)
