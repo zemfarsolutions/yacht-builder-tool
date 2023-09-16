@@ -2,6 +2,10 @@
 import { ref, watch } from 'vue';
 import html2pdf from "html2pdf.js";
 
+const props = defineProps({
+    data:Object
+})
+
 const products = ref(true);
 const summary = ref(false);
 const currentTab = ref(0);
@@ -248,6 +252,7 @@ function printThis() {
             <span class="fw-bold mx-2"><font-awesome-icon icon="person" /> <span style="color: rgb(37 182 200);">{{ cartCapacity }}</span></span>
             <span class="fw-bold mx-2"><font-awesome-icon icon="anchor" /> <span style="color: rgb(37 182 200);">{{ cartAnchor }}</span></span>
             <span class="fw-bold mx-2"><font-awesome-icon icon="dollar" /> <span style="color: rgb(37 182 200);">{{ Intl.NumberFormat().format(cartCost) }}</span> </span>
+            <span class="fw-bold mx-2"><font-awesome-icon icon="user" /> <span style="color: rgb(37 182 200);">{{ props.data.name }}</span></span>
         </div>
     </nav>
 
