@@ -1,6 +1,7 @@
 <script setup>
 import { ref, watch } from 'vue';
 import html2pdf from "html2pdf.js";
+import router from '../router';
 
 const props = defineProps({
     data:Object
@@ -243,16 +244,53 @@ function printThis() {
     
     html2pdf(printcontent.value, opt);
 }
+
+// Delete Session Storage
+function deleteSession() 
+{
+    sessionStorage.clear();
+    router.push({name: 'Home'})
+}
+
+function sendEmail() {
+    const client = new SMTPClient({
+        user: 'developerzemfar@gmail.com',
+        password: 'DDB1488E2BCEFF15AA1F33A489B25E19DC8A',
+        host: 'smtp.elasticemail.com',
+        ssl: true,
+    });
+
+    // send the message and get a callback with an error or details of the message that was sent
+    client.send(
+        {
+            text: 'i hope this works',
+            from: 'you <developerzemfar@gmail.com>',
+            to: 'someone <developerzemfar@gmail.com>',
+            subject: 'testing emailjs',
+        },
+        (err, message) => {
+            console.log(err || message);
+        }
+    );
+}
 </script>
+
 
 <template>
     
-    <nav class="navbar navbar-light" style="background-color: white;">
-        <div class="container-fluid justify-content-start">
-            <span class="fw-bold mx-2"><font-awesome-icon icon="person" /> <span style="color: rgb(37 182 200);">{{ cartCapacity }}</span></span>
-            <span class="fw-bold mx-2"><font-awesome-icon icon="anchor" /> <span style="color: rgb(37 182 200);">{{ cartAnchor }}</span></span>
-            <span class="fw-bold mx-2"><font-awesome-icon icon="dollar" /> <span style="color: rgb(37 182 200);">{{ Intl.NumberFormat().format(cartCost) }}</span> </span>
-            <span class="fw-bold mx-2"><font-awesome-icon icon="user" /> <span style="color: rgb(37 182 200);">{{ props.data.name }}</span></span>
+    <nav class="navbar navbar-light" style="background-color: white;display: block">
+        <div style="display: flow-root">
+            <div class="float-start">
+                <span class="fw-bold mx-2"><font-awesome-icon icon="person" /> <span style="color: rgb(37 182 200);">{{ cartCapacity }}</span></span>
+                <span class="fw-bold mx-2"><font-awesome-icon icon="anchor" /> <span style="color: rgb(37 182 200);">{{ cartAnchor }}</span></span>
+                <span class="fw-bold mx-2"><font-awesome-icon icon="dollar" /> <span style="color: rgb(37 182 200);">{{ Intl.NumberFormat().format(cartCost) }}</span> </span>
+                <span class="fw-bold mx-2"><font-awesome-icon icon="user" /> <span style="color: rgb(37, 182, 200);">{{ props.data.name._value }}</span></span>
+            </div>
+            <div class="float-end">
+                <button @click="deleteSession()" class="btn btn-sm btn-info text-white mx-4" style="font-weight: 500;">
+                    New Project
+                </button>
+            </div>
         </div>
     </nav>
 
@@ -278,7 +316,7 @@ function printThis() {
                     v-for="(draggable, index) in cart"
                     @mousedown="mousedown($event, index)"
                     >
-                        <img :src="`media/`+draggable.path" class="w-100" style="transform: rotate(0deg);">
+                        <img :src="`/media/`+draggable.path" class="w-100" style="transform: rotate(0deg);">
                         <div class="actions">
                             <button class="btn btn-sm btn-light" @click="rotateComponent(draggable, index, 'increment')">
                                 <font-awesome-icon icon="arrow-rotate-forward"/>
@@ -324,7 +362,7 @@ function printThis() {
                             </div>
                         </div>
                         <div class="col-md-4 card-detail-image">
-                            <img :src="`media/`+productDetail.path" width="100" class="img-fluid rounded-start" alt="...">
+                            <img :src="`/media/`+productDetail.path" width="100" class="img-fluid rounded-start" alt="...">
                         </div>
                     </div>
                 </div>
@@ -340,7 +378,7 @@ function printThis() {
                     @click="addToCart(product)"
                     class="card mt-2">
                         <div class="card-img">
-                            <img :src="`media/`+product.path" class="card-img-top" alt="...">
+                            <img :src="`/media/`+product.path" class="card-img-top" alt="...">
                             <span v-if="product.count.value > 0" class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-danger mt-1">
                                 {{ product.count.value }}
                             </span>
@@ -388,7 +426,7 @@ function printThis() {
                                     style="width: 370px;">
                                         <div class="row g-0">
                                             <div class="col-md-4 p-3">
-                                                <img :src="`media/`+item.path" width="100" class="img-fluid rounded-start" alt="...">
+                                                <img :src="`/media/`+item.path" width="100" class="img-fluid rounded-start" alt="...">
                                             </div>
                                             <div class="col-md-8 cart-item-body">
                                                 <div class="card-body">

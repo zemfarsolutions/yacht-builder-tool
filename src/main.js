@@ -9,8 +9,7 @@ import { faAnchor, faArrowRotateBackward, faUser, faArrowRotateForward, faDollar
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import VueSelectImage from 'vue-select-image';
 import 'vue-select-image/dist/vue-select-image.css';
-import VueCryptojs from 'vue-cryptojs'
-import router  from './router';
+import router  from './router'; 
 
 const app = createApp(App)
             .component("font-awesome-icon", FontAwesomeIcon);

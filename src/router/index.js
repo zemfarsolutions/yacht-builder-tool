@@ -9,8 +9,8 @@ const routes = [
         component: Home
     },
     {
-        path: '/yatch-builder-tool',
-        name: 'Yatch Builder',
+        path: '/t/:id',
+        name: 'yatch-builder',
         component: Builder
     }
 ]
