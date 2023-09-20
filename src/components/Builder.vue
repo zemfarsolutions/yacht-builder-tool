@@ -505,7 +505,6 @@ function sendEmail() {
     margin: 0;
 }
 
-
 .draggableItems {
     height: 550px;
     background-color: #4fbbee;
@@ -635,15 +634,6 @@ function sendEmail() {
     border-left: none;
     border-right: none;
 }
-
-img.img-fluid.rounded-start {
-    min-height: 100px;
-    max-width: 90px;
-    max-height: 100px;
-    min-width: 90px;
-}
-
-
 .btn-tab-active {
     border-bottom: 1px solid #4fbbee;
 }

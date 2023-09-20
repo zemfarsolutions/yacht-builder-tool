@@ -1,5 +1,7 @@
 <template>
 
+    <Nav/>
+
     <div class="container" ref="el">
         <div class="row justify-content-center">
             <div class="col-md-6">
@@ -33,6 +35,7 @@
 
 <script setup>
 import { ref,onMounted } from 'vue';
+import Nav from '../components/Nav.vue'
 import router  from '../router';
 import CryptoJS from 'crypto-js';
 
