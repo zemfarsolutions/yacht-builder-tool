@@ -3,9 +3,9 @@
     <div class="container" ref="el">
         <div class="row justify-content-center">
             <div class="col-md-6">
-                <div class="card" style="top: 100px;box-shadow: 1px 1px 8px rgb(179, 179, 179)">
+                <div class="card border-0" style="top: 100px;box-shadow: 1px 1px 8px rgb(179, 179, 179)">
                     <div class="card-header bg-white">
-                        <h5 class="card-title text-info">User Information</h5>
+                        <h5 class="card-title text-code" style="color: rgb(0, 112, 188)">User Information</h5>
                     </div>
                     <div class="card-body">
                         <form @submit="saveDataToSessionStorage">
@@ -21,7 +21,7 @@
                                     <input required type="email" v-model="email" class="form-control" id="inputEmail3">
                                 </div>
                             </div>
-                            <button type="submit" class="btn btn-info text-white btn-sm float-end fw-bold">Continue</button>
+                            <button type="submit" style="background: rgb(0, 112, 188)" class="btn text-white btn-sm float-end fw-bold">Continue</button>
                         </form>
                     </div>
                 </div>
@@ -62,7 +62,7 @@ function saveDataToSessionStorage() {
     if (data) {
         router.push({ name: 'yatch-builder', params: { id: data['userId'] } })
     }else{
-        console.log('abc')
+        console.log('Something went wrong. please try again.')
     }
 }
 </script>

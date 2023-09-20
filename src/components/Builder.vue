@@ -145,7 +145,7 @@ const cart = ref([
 const cartCost = ref(0);
 const cartAnchor = ref(0);
 const cartCapacity = ref(0);
-
+const invoice = ref("");
 // live summary info update
 watch(
   () => cart,
@@ -165,8 +165,11 @@ watch(
   { deep: true }
 )
 
+
 const opacity = ref(0)
 const draggableComponent = ref(null)
+const invoiceContent = ref(null)
+var currentDateWithFormat = new Date().toJSON().slice(0,10).replace(/-/g,'/');
 
 function mousedown (e, index) {
 
@@ -217,32 +220,67 @@ function removeCartItem(item, index) {
 
 function rotateComponent(item, index, action) {
 
+    let currentDeg = parseInt(draggableComponent.value[index].children[0].style.transform.match(/\d+/g)[0]);
+
     if (action == 'increment') {
-        
-        let incrementRotation = draggableComponent.value[index].children[0].style.transform.match(/\d+/g)[0] += 60;
+
+        let incrementRotation = currentDeg += 10;
         draggableComponent.value[index].children[0].style.transform = "rotate("+incrementRotation+"deg)";
     }
     
     if (action == 'decrement') {
 
-        let incrementRotation = draggableComponent.value[index].children[0].style.transform.match(/\d+/g)[0] -= 60;
+        let incrementRotation = currentDeg -= 10;
         draggableComponent.value[index].children[0].style.transform = "rotate("+incrementRotation+"deg)";
     }
 }
 
 const printcontent = ref(null)
 
-function printThis() {
+async function printThis() {
+
+    invoice.value = "<div class='text-white bg-white'>\
+                        <div style='display: flow-root;margin-left: 220px;font-weight: 500;margin-top: 10px;'>\
+                            <div class='d-flex float-start'>\
+                                <h5 class='text-dark'>Name:</h5>\
+                                <h5 class='text-code mx-2 fw-bold' style='color: #0070bc;'>"+props.data.name._value+"</h5>\
+                            </div>\
+                            <div class='d-flex float-end'>\
+                                <h5 class='text-dark'>Date Drawn:</h5>\
+                                <h5 class='text-code mx-2 fw-bold' style='color: #0070bc;'>"+currentDateWithFormat+"</h5>\
+                            </div>\
+                        </div>\
+                    </div>\
+                    <div class='bg-white fw-bold' style='height: 220px;width: 130px;margin-left: 95px;position: absolute;border: 1px solid #878787;'>\
+                        <div style='border-bottom: 2px solid rgb(0 112 188);'>\
+                            <img width='100px' src='/media/logo.jpg'>\
+                        </div>\
+                        <div>\
+                            <div class='text-dark  mb-1' style='font-size: 14px;'>Total Feature:</div>\
+                            <div class='text-code' style='color: #0070bc;font-size: 14px;'>"+cart.value.length+"</div>\
+                        </div>\
+                        <div>\
+                            <div class='text-dark  mb-1' style='font-size: 14px;'>Total Capacity:</div>\
+                            <div class='text-code' style='color: #0070bc;font-size: 14px;'>"+cartCapacity.value+"</div>\
+                        </div>\
+                        <div>\
+                            <div class='text-dark  mb-1' style='font-size: 14px;'>Total Cost:</div>\
+                            <div class='mb-1 text-code' style='color: #0070bc;font-size: 14px;'>$"+cartCost.value+"</div>\
+                        </div>\
+                    \</div>";
 
     var opt = {
         margin:       1,
         filename:     'canvas.pdf',
-        image:        { type: 'jpeg', quality: 0.98 },
+        image:        { type: 'jpeg', quality: 1 },
     };
 
     html2pdf().set(opt).from(printcontent.value).save();
     
-    html2pdf(printcontent.value, opt);
+    await html2pdf(printcontent.value, opt);
+
+    invoiceContent.value.style.display = "none";
+    
 }
 
 // Delete Session Storage
@@ -281,13 +319,13 @@ function sendEmail() {
     <nav class="navbar navbar-light" style="background-color: white;display: block">
         <div style="display: flow-root">
             <div class="float-start">
-                <span class="fw-bold mx-2"><font-awesome-icon icon="person" /> <span style="color: rgb(37 182 200);">{{ cartCapacity }}</span></span>
-                <span class="fw-bold mx-2"><font-awesome-icon icon="anchor" /> <span style="color: rgb(37 182 200);">{{ cartAnchor }}</span></span>
-                <span class="fw-bold mx-2"><font-awesome-icon icon="dollar" /> <span style="color: rgb(37 182 200);">{{ Intl.NumberFormat().format(cartCost) }}</span> </span>
-                <span class="fw-bold mx-2"><font-awesome-icon icon="user" /> <span style="color: rgb(37, 182, 200);">{{ props.data.name._value }}</span></span>
+                <span class="fw-bold mx-2"><font-awesome-icon icon="person" /> <span style="color: rgb(0 112 188);">{{ cartCapacity }}</span></span>
+                <span class="fw-bold mx-2"><font-awesome-icon icon="anchor" /> <span style="color: rgb(0 112 188);">{{ cartAnchor }}</span></span>
+                <span class="fw-bold mx-2"><font-awesome-icon icon="dollar" /> <span style="color: rgb(0 112 188);">{{ Intl.NumberFormat().format(cartCost) }}</span> </span>
+                <span class="fw-bold mx-2"><font-awesome-icon icon="user" /> <span style="color: rgb(0 112 188);">{{ props.data.name._value }}</span></span>
             </div>
             <div class="float-end">
-                <button @click="deleteSession()" class="btn btn-sm btn-info text-white mx-4" style="font-weight: 500;">
+                <button @click="deleteSession()" class="btn btn-sm text-white mx-4" style="font-weight: 500;background: #0070bc;">
                     New Project
                 </button>
             </div>
@@ -299,16 +337,20 @@ function sendEmail() {
             
             <div class="main">
                 <div class="menu">
-                    <button @click="changeMenu('products')" :class="currentTab === 0 ? `btn btn-outline-light text-secondary mx-2 btn-tab btn-tab-active` : 'btn btn-outline-light text-secondary mx-2 btn-tab'">
+                    <button @click="changeMenu('products')" :class="currentTab === 0 ? `btn btn-outline-light text-secondary fw-bold mx-2 btn-tab btn-tab-active` : 'btn btn-outline-light text-secondary fw-bold mx-2 btn-tab'">
                         Products
                     </button>
-                    <button @click="changeMenu('summary')" :class="currentTab === 1 ? `btn btn-outline-light text-secondary mx-2 btn-tab btn-tab-active` : 'btn btn-outline-light text-secondary mx-2 btn-tab'">
+                    <button @click="changeMenu('summary')" :class="currentTab === 1 ? `btn btn-outline-light text-secondary fw-bold mx-2 btn-tab btn-tab-active` : 'btn btn-outline-light text-secondary fw-bold mx-2 btn-tab'">
                         Summary
                     </button>
                 </div>
 
                 <div class="draggableItems" ref="printcontent">
                     
+                    <div class="row" v-html="invoice" ref="invoiceContent">
+                        
+                    </div>
+
                     <img src="/media/image28.png" alt="" style="width: 400px;position: absolute;left: 200px;top: 235px;">
                     
                     <div class="draggableItem" 
@@ -329,7 +371,6 @@ function sendEmail() {
                             </button>
                         </div>
                     </div>
-
                 </div>
             </div> 
             
@@ -442,7 +483,7 @@ function sendEmail() {
                                 </div>
 
                                 <div class="card-footer d-flex justify-content-center border-0 bg-white">
-                                    <button class="btn btn-info text-white" style="font-weight: 500" @click="printThis()">
+                                    <button class="btn text-white" style="font-weight: 500;background: #0070bc;" @click="printThis()">
                                         Print PDF
                                     </button>
                                 </div>
@@ -467,7 +508,7 @@ function sendEmail() {
 
 .draggableItems {
     height: 550px;
-    background-color: skyblue;
+    background-color: #4fbbee;
     width: 100%;
     max-width: 800px;
 }
@@ -479,6 +520,30 @@ function sendEmail() {
     display: flex;
     align-items: center;
     width: 100px;
+}
+
+.companyDetails {
+    height: 200px;
+    width: 120px;
+    margin-left: 100px;
+    position: absolute;
+    border: 1px solid #878787;
+    font-family: fantasy;
+}
+
+.project {
+    display: flow-root;
+    margin-left: 220px;
+    font-family: fantasy;
+    margin-top: 10px;
+}
+
+.text-code {
+    color: #0070bc;
+}
+
+.fs-14 {
+    font-size: 14px;
 }
 
 .actions {
@@ -571,8 +636,16 @@ function sendEmail() {
     border-right: none;
 }
 
+img.img-fluid.rounded-start {
+    min-height: 100px;
+    max-width: 90px;
+    max-height: 100px;
+    min-width: 90px;
+}
+
+
 .btn-tab-active {
-    border-bottom: 1px solid skyblue;
+    border-bottom: 1px solid #4fbbee;
 }
 
 .vdr.active:before {
@@ -609,7 +682,7 @@ function sendEmail() {
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: skyblue;
+  background: #4fbbee;
 }
 
 /* Handle on hover */
