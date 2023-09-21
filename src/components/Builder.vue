@@ -314,7 +314,7 @@ function sendEmail() {
 
 
 <template>
-    <nav class="navbar navbar-dark navbar-expand-lg ">
+    <nav class="navbar navbar-dark navbar-expand-lg height--fixed">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">
                 <div class="main--logo--nav">
@@ -385,181 +385,179 @@ function sendEmail() {
         </div>
     </nav>
 
-    <div class="container">
-        <div class="row">
+    <section class="main--canvas--body" style="width: 100vw;">
+        <div class="main">
+            <div class="draggableItems" ref="printcontent">
 
-            <div class="main">
-                <div class="menu">
-                    <button @click="changeMenu('products')"
-                        :class="currentTab === 0 ? `btn btn-outline-light text-secondary fw-bold mx-2 btn-tab btn-tab-active` : 'btn btn-outline-light text-secondary fw-bold mx-2 btn-tab'">
-                        Products
-                    </button>
-                    <button @click="changeMenu('summary')"
-                        :class="currentTab === 1 ? `btn btn-outline-light text-secondary fw-bold mx-2 btn-tab btn-tab-active` : 'btn btn-outline-light text-secondary fw-bold mx-2 btn-tab'">
-                        Summary
-                    </button>
-                </div>
+                <div class="row" v-html="invoice" ref="invoiceContent"> </div>
 
-                <div class="draggableItems" ref="printcontent">
+                <img src="/media/canvas-ship.png" alt="main-canvas-ship" class="main--canvas--ship">
 
-                    <div class="row" v-html="invoice" ref="invoiceContent">
-
+                <div class="draggableItem" ref="draggableComponent" v-for="(draggable, index) in cart"
+                    @mousedown="mousedown($event, index)">
+                    <img :src="`/media/` + draggable.path" class="w-100" style="transform: rotate(0deg);">
+                    <div class="actions">
+                        <button class="btn btn-sm btn-light" @click="rotateComponent(draggable, index, 'increment')">
+                            <font-awesome-icon icon="arrow-rotate-forward" />
+                        </button>
+                        <button class="btn btn-sm btn-light">
+                            <font-awesome-icon icon="arrow-rotate-backward"
+                                @click="rotateComponent(draggable, index, 'decrement')" />
+                        </button>
+                        <button class="btn btn-sm btn-light" @click="removeCartItem(draggable, index)">
+                            <font-awesome-icon icon="trash" />
+                        </button>
                     </div>
+                </div>
+            </div>
+        </div>
 
-                    <img src="/media/image28.png" alt="" style="width: 400px;position: absolute;left: 200px;top: 235px;">
+        <aside class="side--bar">
+            <div class="menu">
+                <button @click="changeMenu('products')"
+                    :class="currentTab === 0 ? `btn sidebar--tab--selector--active` : 'btn sidebar--tab--selector'">
+                    Products
+                </button>
+                <button @click="changeMenu('summary')"
+                    :class="currentTab === 1 ? `btn sidebar--tab--selector--active` : 'btn sidebar--tab--selector'">
+                    Summary
+                </button>
+            </div>
 
-                    <div class="draggableItem" ref="draggableComponent" v-for="(draggable, index) in cart"
-                        @mousedown="mousedown($event, index)">
-                        <img :src="`/media/` + draggable.path" class="w-100" style="transform: rotate(0deg);">
-                        <div class="actions">
-                            <button class="btn btn-sm btn-light" @click="rotateComponent(draggable, index, 'increment')">
-                                <font-awesome-icon icon="arrow-rotate-forward" />
-                            </button>
-                            <button class="btn btn-sm btn-light">
-                                <font-awesome-icon icon="arrow-rotate-backward"
-                                    @click="rotateComponent(draggable, index, 'decrement')" />
-                            </button>
-                            <button class="btn btn-sm btn-light" @click="removeCartItem(draggable, index)">
-                                <font-awesome-icon icon="trash" />
-                            </button>
+            <div v-show="products" class="products--bar">
+                <div class="card-list">
+                    <div class="cards-grid">
+                        <div v-for="product in productList" @mouseover="showProductDetail(product)"
+                            @mouseleave="hideProductDetail(product)" @click="addToCart(product)" class="card products--bar--card">
+                            <div class="card-img">
+                                <img :src="`/media/` + product.path" alt="product-img">
+                                <span v-if="product.count.value > 0"
+                                    class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-danger mt-1">
+                                    {{ product.count.value }}
+                                </span>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">{{ product.name }}</h5>
+                                <div class="d-flex justify-content-between align-content-center">
+                                    <p>{{ product.size }}</p>
+                                    <p>${{ Intl.NumberFormat().format(product.cost)}}</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <transition name="fade">
-                <div v-show="cardDetail" class="card mb-3 card-detail">
-                    <div class="row g-0">
-                        <div class="col-md-8">
-                            <div class="card-body" style="padding: 20px;">
-                                <h5 class="card-title fw-bold">{{ productDetail.name }}</h5>
-
-                                <div style="display: flow-root">
-                                    <p class="float-start">Capacity:</p>
-                                    <p class="float-end">{{ productDetail.capacity }}</p>
-                                </div>
-
-                                <div style="display: flow-root">
-                                    <p class="float-start">Size:</p>
-                                    <p class="float-end">{{ productDetail.size }}</p>
-                                </div>
-
-                                <div style="display: flow-root">
-                                    <p class="float-start">Anchors:</p>
-                                    <p class="float-end">{{ productDetail.anchors }}</p>
-                                </div>
-
-                                <div style="display: flow-root">
-                                    <p class="float-start">Cost:</p>
-                                    <p class="float-end">${{ productDetail.cost }}</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4 card-detail-image">
-                            <img :src="`/media/` + productDetail.path" width="100" class="img-fluid rounded-start"
-                                alt="...">
-                        </div>
-                    </div>
-                </div>
-            </transition>
-
-            <div v-show="products" class="row card-list">
-                <div class="col-md-4 cards-grid">
-
-                    <div v-for="product in productList" @mouseover="showProductDetail(product)"
-                        @mouseleave="hideProductDetail(product)" @click="addToCart(product)" class="card mt-2">
-                        <div class="card-img">
-                            <img :src="`/media/` + product.path" class="card-img-top" alt="...">
-                            <span v-if="product.count.value > 0"
-                                class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-danger mt-1">
-                                {{ product.count.value }}
-                            </span>
-                        </div>
-                        <div class="card-body">
-                            <h5 class="card-title">{{ product.name }}</h5>
-                            <div style="display: flow-root;font-family: inherit;">
-                                <p class="card-text float-start">{{ product.size }}</p>
-                                <p class="card-text float-end fw-bold">${{ Intl.NumberFormat().format(product.cost) }}</p>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-
-            <div v-show="summary" class="row card-list">
-                <div class="col-md-4">
-                    <div class="card mt-2" style="width: 400px;box-shadow: none;">
+            <div v-show="summary" class="summary--bar">
+                <div class="card-list summary--bar--card--list">
+                    <!-- <div class="col-md-4"> -->
+                    <div class="card summary--bar--card">
                         <div class="row g-0">
                             <div class="col-md-12">
-                                <div class="card-body">
-                                    <div class="mt-2" style="display: flow-root">
-                                        <p class="float-start fw-bold fs-6">FEATURE:</p>
-                                        <p class="float-end text-danger fw-bold">{{ cart.length }}</p>
-                                    </div>
-                                    <div class="mt-2" style="display: flow-root">
-                                        <p class="float-start fw-bold fs-6">CAPACITY:</p>
-                                        <p class="float-end text-danger fw-bold">{{ cartCapacity }}</p>
-                                    </div>
-                                    <div class="mt-2" style="display: flow-root">
-                                        <p class="float-start fw-bold fs-6">ANCHORS:</p>
-                                        <p class="float-end text-danger fw-bold">{{ cartAnchor }}</p>
-                                    </div>
-                                    <div class="mt-2" style="display: flow-root">
-                                        <p class="float-start fw-bold fs-6">TOTAL COST:</p>
-                                        <p class="float-end text-danger fw-bold">$ {{ Intl.NumberFormat().format(cartCost)
-                                        }}</p>
+                                <div class="card-body summary--bar--card--body">
+                                    <div class="summary--bar--card--body--statistics">
+                                        <div class="summary--bar--card--body--statistics--row">
+                                            <h5>FEATURE:</h5>
+                                            <p>{{ cart.length }}</p>
+                                        </div>
+                                        <div class="summary--bar--card--body--statistics--row">
+                                            <h5>CAPACITY:</h5>
+                                            <p>{{ cartCapacity }}</p>
+                                        </div>
+                                        <div class="summary--bar--card--body--statistics--row">
+                                            <h5>ANCHORS:</h5>
+                                            <p>{{ cartAnchor }}</p>
+                                        </div>
+                                        <div class="summary--bar--card--body--statistics--row">
+                                            <h5>TOTAL COST:</h5>
+                                            <p>
+                                                $ {{Intl.NumberFormat().format(cartCost)}}
+                                            </p>
+                                        </div>
                                     </div>
 
-                                    <hr>
-
-                                    <div v-for="item in cart" class="card mb-3" style="width: 370px;">
+                                    <div v-for="item in cart" class="card summary--bar--card--body--prod">
                                         <div class="row g-0">
-                                            <div class="col-md-4 p-3">
-                                                <img :src="`/media/` + item.path" width="100"
-                                                    class="img-fluid rounded-start" alt="...">
+                                            <div class="col-md-3">
+                                                <div class="img--card">
+                                                    <img :src="`/media/` + item.path" alt="selected-product">
+                                                </div>
                                             </div>
-                                            <div class="col-md-8 cart-item-body">
+                                            <div class="col-md-9 cart-item-body">
                                                 <div class="card-body">
                                                     <h5 class="card-title">{{ item.name }}</h5>
-                                                    <div style="display: flow-root;font-family: inherit;">
-                                                        <p class="card-text float-start">{{ item.size }}</p>
-                                                        <p class="card-text float-end fw-bold">${{
-                                                            Intl.NumberFormat().format(item.cost) }}</p>
-                                                    </div>
+                                                    <span class="d-flex justify-content-between align-content-center">
+                                                        <p class="card-text">{{ item.size }}</p>
+                                                        <p class="card-text">${{ Intl.NumberFormat().format(item.cost) }}</p>
+                                                    </span>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-
-                                <div class="card-footer d-flex justify-content-center border-0 bg-white">
-                                    <button class="btn text-white" style="font-weight: 500;background: #0070bc;"
-                                        @click="printThis()">
+                                <div class="card-footer summary--bar--card--footer">
+                                    <button class="btn btn--primary--custom--v2" @click="printThis()">
                                         Print PDF
                                     </button>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <!-- </div> -->
                 </div>
             </div>
-        </div>
-    </div>
+
+            <transition name="fade">
+                <div v-show="cardDetail" class="card popUp--card">
+                    <div class="card-detail popUp--card--detail">
+                        <div class="row g-0">
+                            <div class="col-md-8">
+                                <div class="card-body" style="padding: 20px;">
+                                    <h5 class="card-title fw-bold">{{ productDetail.name }}</h5>
+    
+                                    <div style="display: flow-root">
+                                        <p class="float-start">Capacity:</p>
+                                        <p class="float-end">{{ productDetail.capacity }}</p>
+                                    </div>
+    
+                                    <div style="display: flow-root">
+                                        <p class="float-start">Size:</p>
+                                        <p class="float-end">{{ productDetail.size }}</p>
+                                    </div>
+    
+                                    <div style="display: flow-root">
+                                        <p class="float-start">Anchors:</p>
+                                        <p class="float-end">{{ productDetail.anchors }}</p>
+                                    </div>
+    
+                                    <div style="display: flow-root">
+                                        <p class="float-start">Cost:</p>
+                                        <p class="float-end">${{ productDetail.cost }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 card-detail-image">
+                                <img :src="`/media/` + productDetail.path" width="100" class="img-fluid rounded-start"
+                                    alt="...">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </transition>
+        </aside>
+    </section>
 </template>
 
 <style scoped>
-.container {
-    padding: 0px;
-    margin-top: 5px;
-    margin: 0;
-}
-
 .draggableItems {
-    height: 550px;
-    background-color: #4fbbee;
+    /* height: 550px; */
+    height: 90vh;
+    background: url('/media/canvas-bg.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
     width: 100%;
-    max-width: 800px;
+    /* max-width: 800px; */
 }
 
 .draggableItem {
@@ -603,12 +601,12 @@ function sendEmail() {
     opacity: v-bind(opacity);
 }
 
-.menu {
+/* .menu {
     z-index: 999;
     display: flex;
     justify-content: end;
     float: right
-}
+} */
 
 .card-img-top {
     width: 135px;
@@ -616,47 +614,50 @@ function sendEmail() {
 }
 
 .card {
-    width: 180px;
+    /* width: 180px; */
     border: none;
     box-shadow: 1px 1px 8px #a1a1a1;
     position: sticky;
+    margin: 5px;
 }
-
+/* 
 .card-title {
     font-size: 16px;
 }
 
 .card-text {
     font-size: 12px;
-}
+} */
 
-.card-img {
+/* .card-img {
     height: 175px;
     display: flex;
     align-items: center;
     justify-content: center;
-}
+} */
 
 .card-body {
     padding-top: 0;
     padding-bottom: 0;
 }
 
-.card-list {
+/* .card-list {
     justify-content: end;
     overflow-y: scroll;
     height: 500px;
+    height: 90vh;
     position: absolute;
     right: 35px;
     top: 100px;
-}
+} */
 
 .cards-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    /* grid-template-columns: 1fr 1fr; */
+    grid-template-columns: 50% 50%;
 }
 
-.card-detail {
+/* .card-detail {
     width: 500px;
     font-family: sans-serif;
     font-weight: bold;
@@ -666,6 +667,18 @@ function sendEmail() {
     right: 450px;
     float: right;
     margin-top: 315px;
+} */
+
+.popUp--card {
+  width: 40vw;
+  font-family: sans-serif;
+  font-weight: bold;
+  font-size: 13px;
+  z-index: auto;
+  position: absolute;
+  right: 30vw;
+  margin-top: 0;
+  top: 11vh;
 }
 
 .card-detail-image {
@@ -687,9 +700,9 @@ function sendEmail() {
     border-right: none;
 }
 
-.btn-tab-active {
+/* .btn-tab-active {
     border-bottom: 1px solid #4fbbee;
-}
+} */
 
 .vdr.active:before {
     outline: 0px;
