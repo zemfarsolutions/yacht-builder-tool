@@ -1,0 +1,189 @@
+@font-face {
+   font-family: Avenir Next;
+   src: url('../../public/font/AvenirNextLTPro-Regular.otf');
+}
+
+* {
+   margin: 0;
+   padding: 0;
+}
+
+.top--bar--nav {
+   max-height: 45px;
+   text-align: center;
+   margin: 0;
+   padding: 5px;
+   display: flex;
+   justify-content: center;
+   flex-wrap: wrap;
+   align-content: center;
+   background: #1773b0;
+}
+
+.top--bar--nav h5 {
+   font-family: "Oswald", sans-serif;
+   font-size: 18.2px;
+   line-height: 22.1px;
+   word-break: break-word;
+   color: rgb(255, 255, 255);
+   letter-spacing: 1px;
+}
+
+nav.navbar {
+   background: #000;
+   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+nav.navbar .nav-link {
+   line-height: calc(1 + 0.3 / 1.0);
+   transition: text-decoration .1s ease;
+   padding: 1.2rem;
+   text-decoration: none;
+   color: rgba(255, 255, 255, .75) !important;
+   font-size: 14px;
+   font-family: "Avenir Next", sans-serif;
+   letter-spacing: 0.6px;
+   font-weight: 500;
+}
+
+nav.navbar .nav-link.active,
+nav.navbar .nav-link:hover {
+   transition: text-decoration .1s ease;
+   color: rgba(255, 255, 255, 1) !important;
+   text-decoration-thickness: 0.2rem;
+   text-decoration: underline;
+   text-underline-offset: 0.3rem;
+}
+
+nav.navbar .dropdown-menu {
+   background: #000;
+   padding: 1.4rem 0;
+   transform: translateY(-0.5rem);
+   border-radius: 0;
+   border-color: rgba(255, 255, 255, 0.1);
+   border-style: solid;
+   border-width: 1px;
+   box-shadow: 0px 4px 5px rgba(255, 255, 255, 0.0);
+}
+
+nav.navbar .dropdown-menu .dropdown-item {
+   line-height: calc(1 + 0.3 / 1.0);
+   text-decoration: none;
+   color: rgba(255, 255, 255, .75) !important;
+   font-size: 14px;
+   font-family: "Avenir Next", sans-serif;
+   letter-spacing: 0.6px;
+   font-weight: 500;
+   justify-content: space-between;
+}
+
+nav.navbar .dropdown-menu .dropdown-item:hover {
+   color: rgba(255, 255, 255, 1) !important;
+   background: transparent;
+}
+
+.main--logo--nav {
+   max-width: 120px;
+}
+
+.main--logo--nav img {
+   width: 100%;
+}
+
+.welcome--screen {
+   height: 80vh;
+   background: #000;
+}
+
+.welcome--screen--card {
+   width: 100%;
+   transform: translate(-50%, -50%);
+   top: 55%;
+   left: 50%;
+   position: absolute;
+   max-width: 600px;
+}
+
+.welcome--screen--card .card {
+   background: #1F1F21;
+   border: 0;
+   border-radius: 0;
+}
+
+.welcome--screen--card .card .card-header {
+   background: #1773b0;
+   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+   text-align: center;
+   border-radius: 0;
+}
+
+.welcome--screen--card .card .card-header .card-title {
+   font-family: "Oswald", sans-serif;
+   font-size: 24px;
+   line-height: 22.1px;
+   word-break: break-word;
+   color: rgb(255, 255, 255);
+   letter-spacing: 1px;
+}
+
+.welcome--screen--card .card .project--details .form-label {
+   font-family: "Oswald", sans-serif;
+   font-size: 18px;
+   line-height: 22.1px;
+   color: rgb(255, 255, 255);
+   letter-spacing: 1px;
+   margin-bottom: 15px;
+}
+
+.welcome--screen--card .card .project--details .form-control {
+   background: #000;
+   border: 0;
+   border-radius: 0;
+   color: #fff;
+   min-height: 50px;
+   font-family: "Avenir Next", sans-serif;
+   font-size: 16px;
+}
+
+.btn--primary--custom,
+.btn--primary--custom--v2 {
+   background: #0070bc;
+   color: rgb(255, 255, 255) ;
+   border: 0;
+   border-radius: 0;
+   font-family: "Avenir Next", sans-serif;
+   font-size: 15px;
+   font-weight: 500 !important;
+   letter-spacing: 1px;
+   line-height: 18px;
+   padding: 15px 25px;
+   width: 100%;
+}
+
+.btn--primary--custom:hover {
+   background: #000;
+   color: #fff;
+}
+
+.btn--primary--custom--v2:hover {
+   background: #1F1F21;
+   color: #fff;
+}
+
+.statistics--summary {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+}
+
+.statistics--icon--nav {
+   color: #1773b0;
+   fill: #1773b0;
+   margin-right: 10px;
+}
+
+.statistics--text--nav {
+   font-family: 'Avenir Next', sans-serif;
+   font-size: 18px;
+   color: #fff;
+}
