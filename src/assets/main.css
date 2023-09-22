@@ -117,6 +117,45 @@ nav.navbar .dropdown-menu .dropdown-item:hover {
    color: rgb(255, 255, 255);
    letter-spacing: 1px;
 }
+
+.welcome--screen--card--test .card {
+   background: #1F1F21;
+   border: 0;
+   border-radius: 0;
+}
+.welcome--screen--card--test .card .card-header {
+   background: #1773B0;
+   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+   text-align: center;
+   border-radius: 0;
+}
+.welcome--screen--card--test .card .card-header .card-title {
+   font-family: "Oswald", sans-serif;
+   font-size: 24px;
+   line-height: 22.1px;
+   word-break: break-word;
+   color: rgb(255, 255, 255);
+   letter-spacing: 1px;
+}
+
+.welcome--screen--card--test .card .project--details .form-label {
+   font-family: "Oswald", sans-serif;
+   font-size: 18px;
+   line-height: 22.1px;
+   color: rgb(255, 255, 255);
+   letter-spacing: 1px;
+   margin-bottom: 15px;
+}
+.welcome--screen--card--test .card .project--details .form-control {
+   background: #000;
+   border: 0;
+   border-radius: 0;
+   color: #fff;
+   min-height: 50px;
+   font-family: "Avenir Next", sans-serif;
+   font-size: 16px;
+}
+
 .welcome--screen--card .card .project--details .form-label {
    font-family: "Oswald", sans-serif;
    font-size: 18px;

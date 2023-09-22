@@ -27,7 +27,7 @@
                                         fill="currentColor" />
                                 </svg>
                             </span>
-                            <span class="statistics--text--nav">{{ orderSummary.products }}</span>
+                            <span class="statistics--text--nav">{{ orderSummary.totalProducts }}</span>
                         </div>
                     </li>
                     <li class="fw-bold mx-2 nav-item">
@@ -65,41 +65,105 @@
         </div>
     </nav>
 
-    <div class="welcome--screen">
+    <div class="welcome--screen--test" style="background: #000; padding: 50px 0">
         <div class="container" ref="el">
             <div class="row justify-content-center">
-                <div class="col-md-6">
-                    <div class="welcome--screen--card">
+                <div class="col-md-8">
+                    <div class="welcome--screen--card--test">
                         <div class="card border-0">
                             <div class="card-header">
                                 <h5 class="card-title text-code">Enquire Now</h5>
                             </div>
                             <div class="card-body">
-                                <form @submit="saveDataToSessionStorage" class="project--details">
+                                <div class="project--details">
                                     <div class="row mb-4 g-3">
                                         <div class="col-sm-12">
                                             <label for="project-name" class="form-label">Project Name</label>
-                                            <input required type="text" v-model="name" class="form-control" id="project-name">
+                                            <input required type="text" v-model="project_name" class="form-control" id="project-name">
                                         </div>
                                         <div class="col-sm-12">
+                                            <label for="name" class="form-label">Name</label>
+                                            <input required type="text" v-model="name" class="form-control" id="name">
+                                        </div>
+                                        <div class="col-sm-6">
                                             <label for="user-email" class="form-label">Email</label>
                                             <input required type="email" v-model="email" class="form-control" id="user-email">
                                         </div>
-                                        <div class="col-sm-12">
+                                        <div class="col-sm-6">
                                             <label for="user-phone" class="form-label">Phone</label>
                                             <input required type="text" v-model="phone" class="form-control" id="user-phone">
                                         </div>
-                                        <div class="col-sm-6">
-                                            <a href="https://www.aquaclub.com.au/pages/custom-creations" class="btn btn--primary--custom">Back to Website</a>
+                                        <div class="col-sm-12">
+                                            <label for="enquiry-details" class="form-label">Enquiry</label>
+                                            <textarea required class="form-control" v-model="enquiry" id="enquiry-details" cols="30" rows="5"></textarea>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <label for="attachment" class="form-label">Attachment</label>
+                                            <input type="file" class="form-control" id="attachment">
+                                            <div id="attachment" class="form-text text-white">Select the PDF just downloaded on your device.</div>
                                         </div>
                                         <div class="col-sm-6">
-                                            <button type="submit" class="btn btn--primary--custom">Continue</button>
+                                            <button @click="goBack()" class="btn btn--primary--custom">Cancel Order</button>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <button @click="sendEmail()" class="btn btn--primary--custom">Continue</button>
                                         </div>
                                     </div>
-                                </form>
+                                </div>
                             </div>
                         </div>
                     </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="summary--bar">
+                    <div class="card-list summary--bar--card--list">
+                        <!-- <div class="col-md-4"> -->
+                        <div class="card summary--bar--card">
+                            <div class="row g-0">
+                                <div class="col-md-12">
+                                    <div class="card-body summary--bar--card--body">
+                                        <div class="summary--bar--card--body--statistics">
+                                            <div class="summary--bar--card--body--statistics--row">
+                                                <h5>Products:</h5>
+                                                <p>{{ orderSummary.totalProducts }}</p>
+                                            </div>
+                                            <div class="summary--bar--card--body--statistics--row">
+                                                <h5>CAPACITY:</h5>
+                                                <p>{{ orderSummary.capacity }}</p>
+                                            </div>
+                                            <div class="summary--bar--card--body--statistics--row">
+                                                <h5>TOTAL COST:</h5>
+                                                <p>
+                                                    $ {{ Intl.NumberFormat().format(orderSummary.cost) }}
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div v-for="(item, index) in orderSummary.products" class="card summary--bar--card--body--prod">
+                                            <div class="row g-0">
+                                                <div class="col-md-3">
+                                                    <div class="img--card">
+                                                        <img :src="`/media/images/`+item.path" alt="selected-product">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9 cart-item-body">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">{{ item.name }}</h5>
+                                                        <span class="d-flex justify-content-between align-content-center">
+                                                            <p class="card-text">{{ item.size }}</p>
+                                                            <p class="card-text">${{ Intl.NumberFormat().format(item.cost) }}</p>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- </div> -->
+                    </div>
+                </div>
                 </div>
             </div>
         </div>
@@ -107,22 +171,62 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
+import  emailjs  from '@emailjs/browser';
+import router from '../router';
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
+
+const orderSummary = JSON.parse(sessionStorage.getItem('orderSummary'));
 
 const el = ref();
 const name = ref();
-const email = ref();
-const phone = ref();
+const project_name = ref(orderSummary.project);
+const email = ref(orderSummary.user_email);
+const phone = ref(orderSummary.user_phone);
+const enquiry = ref('Lorem ipsum dolor, sit amet consectetur adipisicing elit. Et, maiores! Nam amet autem quasi suscipit praesentium delectus, laborum dolorem atque temporibus possimus at accusantium perferendis libero earum facere repellendus illum.');
 
-const orderSummary = JSON.parse(sessionStorage.getItem('orderSummary')); 
 async function sendEmail() {
     
-    // emailjs.sendForm('service_1ta48fh', 'template_aqcu7ch', form.value, 'sRg667CP8QejTZBD7')
-    //         .then((result) => {
-    //             console.log('SUCCESS!', result.text);
-    //         }, (error) => {
-    //             console.log('FAILED...', error.text);
-    //         });
+    if (name.value == null || project_name.value == null || email.value == null 
+    || phone.value == null || enquiry.value == null) {
+
+        toast.error("Some fields are missing. Please check and try again!", {
+            autoClose: 1000,
+        });
+
+    }else{
+
+        var params = {
+            name: name.value,
+            email: email.value,
+            phone: phone.value,
+            enquiry: enquiry.value,
+            project_name: project_name.value,
+            number_of_products: orderSummary.totalProducts,
+            capacity: orderSummary.capacity,
+            total_cost: orderSummary.cost
+        };
+    
+        toast("Great! Thanks for your order.", {
+            autoClose: 1000,
+        });
+
+        await emailjs.send('service_1ta48fh', 'template_aftj664', params, 'sRg667CP8QejTZBD7')
+                .then((result) => {
+                    console.log('SUCCESS!', result.text);
+                }, (error) => {
+                    console.log('FAILED...', error.text);
+                });
+
+        const userData = JSON.parse(sessionStorage.getItem('userData'));
+        router.push({ name: 'yatch-builder', params: { id: userData['userId'] } }); 
+        
+    }
 } 
 
+function goBack(){
+    sessionStorage.clear();
+    router.push({ name: 'Home'}); 
+}
 </script>

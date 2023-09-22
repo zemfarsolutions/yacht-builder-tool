@@ -235,7 +235,16 @@ function rotateComponent(event , draggable, index, action) {
 
 const printcontent = ref(null)
 
-async function printThis() {
+// Delete Session Storage
+function deleteSession() 
+{
+    sessionStorage.clear();
+    router.push({name: 'Home'})
+}
+
+const form = ref(null)
+
+async function enquireNow() {
 
     let actions = document.getElementsByClassName('actions');
     
@@ -284,27 +293,15 @@ async function printThis() {
     const result = await html2pdf(printcontent.value, opt).output();
     
     invoice.value = ""
-    
-}
-
-// Delete Session Storage
-function deleteSession() 
-{
-    sessionStorage.clear();
-    router.push({name: 'Home'})
-}
-
-const form = ref(null)
-
-function enquireNow() {
 
     const orderSummary = {
-        username: props.data.name._value,
-        useremail: props.data.email._value,
-        userphone: props.data.phone._value,
-        products: cart.value.length,
+        project: props.data.name._value,
+        user_email: props.data.email._value,
+        user_phone: props.data.phone._value,
+        totalProducts: cart.value.length,
         capacity: cartCapacity.value,
-        cost: cartCost.value
+        cost: cartCost.value,
+        products: cart.value
     }
 
     sessionStorage.setItem('orderSummary', JSON.stringify(orderSummary));
@@ -498,7 +495,7 @@ function enquireNow() {
                                     </div>
                                 </div>
                                 <div class="card-footer summary--bar--card--footer">
-                                    <button class="btn btn--primary--custom--v2" @click="printThis()">
+                                    <button class="btn btn--primary--custom--v2" @click="enquireNow()">
                                         Enquire Now
                                     </button>
                                 </div>
