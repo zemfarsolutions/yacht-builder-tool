@@ -21,8 +21,12 @@
                                             <label for="user-email" class="form-label">Email</label>
                                             <input required type="email" v-model="email" class="form-control" id="user-email">
                                         </div>
+                                        <div class="col-sm-12">
+                                            <label for="user-phone" class="form-label">Phone</label>
+                                            <input required type="text" v-model="phone" class="form-control" id="user-phone">
+                                        </div>
                                         <div class="col-sm-6">
-                                            <button type="submit" class="btn btn--primary--custom">Back to Website</button>
+                                            <a href="https://www.aquaclub.com.au/pages/custom-creations" class="btn btn--primary--custom">Back to Website</a>
                                         </div>
                                         <div class="col-sm-6">
                                             <button type="submit" class="btn btn--primary--custom">Continue</button>
@@ -47,6 +51,7 @@ import CryptoJS from 'crypto-js';
 const el = ref();
 const name = ref();
 const email = ref();
+const phone = ref();
 
 onMounted(() => {
     const userData = JSON.parse(sessionStorage.getItem('userData'));
@@ -60,7 +65,8 @@ function saveDataToSessionStorage() {
     const userInput = {
         userId: CryptoJS.AES.encrypt(email.value, 'password').toString(),
         name: name,
-        email: email
+        email: email,
+        phone: phone
     }
 
     sessionStorage.setItem('userData', JSON.stringify(userInput));

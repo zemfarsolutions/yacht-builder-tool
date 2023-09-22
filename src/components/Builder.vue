@@ -2,9 +2,10 @@
 import { ref, watch } from 'vue';
 import html2pdf from "html2pdf.js";
 import router from '../router';
+import emailjs from '@emailjs/browser';
 
 const props = defineProps({
-    data: Object
+    data:Object
 })
 
 const products = ref(true);
@@ -18,7 +19,7 @@ function changeMenu(tab) {
         summary.value = true;
         currentTab.value = 1;
 
-    } else {
+    }else{
 
         products.value = true
         summary.value = false
@@ -31,77 +32,60 @@ const cardDetail = ref(false);
 const productList = [
     {
         id: 1,
-        path: 'image39.png',
+        path: 'single-jetski-dock.png',
         name: 'Single Jet Ski Dock',
         capacity: 10,
         size: '4x3m',
-        anchors: 3,
         cost: 4995,
         rotate: ref(0),
         count: ref(0)
     },
     {
         id: 2,
-        path: 'image40.png',
+        path: 'double-jetski-dock.png',
         name: 'Double Jet Ski Dock',
         capacity: 8,
         size: '5x3m',
-        anchors: 5,
         cost: 5199,
         rotate: ref(0),
         count: ref(0)
     },
     {
         id: 3,
-        path: 'image41.png',
+        path: '3x2-dock.png',
         name: '3x2 Dock',
         capacity: 5,
         size: '3x2m',
-        anchors: 2,
         cost: 3144,
         rotate: ref(0),
         count: ref(0)
     },
     {
         id: 4,
-        path: 'image61.png',
+        path: '4x2-dock.png',
         name: '4x2 Dock',
         capacity: 6,
         size: '4x2m',
-        anchors: 3,
         cost: 2599,
         rotate: ref(0),
         count: ref(0)
     },
     {
         id: 5,
-        path: 'image57.png',
+        path: 'doggy-dock.png',
         name: 'Doggy Dock',
         capacity: 7,
         size: '1.4x1m',
-        anchors: 4,
         cost: 4122,
         rotate: ref(0),
         count: ref(0)
     },
     {
         id: 6,
-        path: 'image58.png',
+        path: 'sea-pool.png',
         name: 'Sea Pool',
         capacity: 7,
         size: '5x4m',
-        anchors: 4,
-        cost: 4122,
-        rotate: ref(0),
-        count: ref(0)
-    },
-    {
-        id: 7,
-        path: 'image47.png',
-        name: 'Inflatable Lounger',
-        capacity: 7,
-        size: '2x2m',
-        anchors: 4,
         cost: 4122,
         rotate: ref(0),
         count: ref(0)
@@ -135,61 +119,61 @@ function hideProductDetail(val) {
 // onClick add item into cart
 function addToCart(val) {
     val.count.value++
+    val['cartItemID'] = Math.random().toString(36).slice(2)
+    console.log(val['cartItemID'])
     cart.value.push(val);
 }
 
 // dynamic cart items
 const cart = ref([
-])
+])  
 
 const cartCost = ref(0);
-const cartAnchor = ref(0);
 const cartCapacity = ref(0);
 const invoice = ref("");
+const decrement = ref(null)
+
 // live summary info update
 watch(
-    () => cart,
-    (newValue, oldValue) => {
+  () => cart,
+  (newValue, oldValue) => {    
         cartCost.value = newValue.value.reduce((sum, item) => {
             return sum + item.cost
-        }, 0);
-
-        cartAnchor.value = newValue.value.reduce((sum, item) => {
-            return sum + item.anchors
         }, 0);
 
         cartCapacity.value = newValue.value.reduce((sum, item) => {
             return sum + item.capacity
         }, 0);
-    },
-    { deep: true }
+
+  },
+  { deep: true }
 )
 
 
 const opacity = ref(0)
 const draggableComponent = ref(null)
 const invoiceContent = ref(null)
-var currentDateWithFormat = new Date().toJSON().slice(0, 10).replace(/-/g, '/');
+var currentDateWithFormat = new Date().toJSON().slice(0,10).replace(/-/g,'/');
 
-function mousedown(e, index) {
+function mousedown (e, index) {
 
     window.addEventListener('mousemove', mousemove)
     window.addEventListener('mouseup', mouseup)
-
+    
     let prevX = e.clientX
     let prevY = e.clientY
     let currentIndex = index;
     const dom = draggableComponent.value;
-
+    
     dom[currentIndex].children[1].style.opacity == 0 ? dom[currentIndex].children[1].style.opacity = 1 : dom[currentIndex].children[1].style.opacity = 0
-
-    function mousemove(e) {
+    
+    function mousemove (e) {
         // new x - where is the mouse now
         const newX = prevX - e.clientX
         const newY = prevY - e.clientY
-
+        
         const rect = dom[currentIndex].getBoundingClientRect()
-
+        
         dom[currentIndex].style.position = 'absolute';
         dom[currentIndex].style.zIndex = 1000;
 
@@ -199,39 +183,53 @@ function mousedown(e, index) {
         prevY = e.clientY
     }
 
-    function mouseup() { // remove event listener
+    function mouseup () { // remove event listener
         window.removeEventListener('mousemove', mousemove)
         window.removeEventListener('mouseup', mouseup)
     }
 }
 
 function removeCartItem(item, index) {
-
+    
     item.count--
 
-    if (cart.value[index] === item) {
+    if(cart.value[index] === item) { 
         cart.value.splice(index, 1)
     } else {
         let found = cart.value.indexOf(item)
         cart.value.splice(found, 1)
     }
-
+      
 }
 
-function rotateComponent(item, index, action) {
+function rotateComponent(event , draggable, index, action) {
 
     let currentDeg = parseInt(draggableComponent.value[index].children[0].style.transform.match(/\d+/g)[0]);
-
+    
     if (action == 'increment') {
 
-        let incrementRotation = currentDeg += 10;
-        draggableComponent.value[index].children[0].style.transform = "rotate(" + incrementRotation + "deg)";
+        let incrementRotation = currentDeg += 90;
+        draggableComponent.value[index].children[0].style.transform = "rotate("+incrementRotation+"deg)";
+    }
+    
+    if (action == 'decrement') {
+        
+        let incrementRotation = currentDeg -= 90;
+        draggableComponent.value[index].children[0].style.transform = "rotate("+incrementRotation+"deg)";
     }
 
-    if (action == 'decrement') {
-
-        let incrementRotation = currentDeg -= 10;
-        draggableComponent.value[index].children[0].style.transform = "rotate(" + incrementRotation + "deg)";
+    let back = draggableComponent.value[index].children[1].querySelector('.backward');
+    
+    if (currentDeg > 0) {
+        if (back !== null) {
+            back.style.display = "block"
+        }
+    }
+    
+    if (currentDeg == 0) {
+        if (back !== null) {
+            back.style.display = "none"
+        }
     }
 }
 
@@ -239,15 +237,21 @@ const printcontent = ref(null)
 
 async function printThis() {
 
+    let actions = document.getElementsByClassName('actions');
+    
+    actions.forEach(element => {
+        element.style.opacity = 0;
+    });
+
     invoice.value = "<div class='text-white bg-white'>\
                         <div style='display: flow-root;margin-left: 220px;font-weight: 500;margin-top: 10px;'>\
                             <div class='d-flex float-start'>\
                                 <h5 class='text-dark'>Name:</h5>\
-                                <h5 class='text-code mx-2 fw-bold' style='color: #0070bc;'>"+ props.data.name._value + "</h5>\
+                                <h5 class='text-code mx-2 fw-bold' style='color: #0070bc;'>"+props.data.name._value+"</h5>\
                             </div>\
                             <div class='d-flex float-end'>\
                                 <h5 class='text-dark'>Date Drawn:</h5>\
-                                <h5 class='text-code mx-2 fw-bold' style='color: #0070bc;'>"+ currentDateWithFormat + "</h5>\
+                                <h5 class='text-code mx-2 fw-bold' style='color: #0070bc;'>"+currentDateWithFormat+"</h5>\
                             </div>\
                         </div>\
                     </div>\
@@ -257,58 +261,55 @@ async function printThis() {
                         </div>\
                         <div>\
                             <div class='text-dark  mb-1' style='font-size: 14px;'>Total Feature:</div>\
-                            <div class='text-code' style='color: #0070bc;font-size: 14px;'>"+ cart.value.length + "</div>\
+                            <div class='text-code' style='color: #0070bc;font-size: 14px;'>"+cart.value.length+"</div>\
                         </div>\
                         <div>\
                             <div class='text-dark  mb-1' style='font-size: 14px;'>Total Capacity:</div>\
-                            <div class='text-code' style='color: #0070bc;font-size: 14px;'>"+ cartCapacity.value + "</div>\
+                            <div class='text-code' style='color: #0070bc;font-size: 14px;'>"+cartCapacity.value+"</div>\
                         </div>\
                         <div>\
                             <div class='text-dark  mb-1' style='font-size: 14px;'>Total Cost:</div>\
-                            <div class='mb-1 text-code' style='color: #0070bc;font-size: 14px;'>$"+ cartCost.value + "</div>\
+                            <div class='mb-1 text-code' style='color: #0070bc;font-size: 14px;'>$"+cartCost.value+"</div>\
                         </div>\
                     \</div>";
 
     var opt = {
-        margin: 1,
-        filename: 'canvas.pdf',
-        image: { type: 'jpeg', quality: 1 },
+        margin:       1,
+        filename:     'media/canvas.pdf',
+        image:        { type: 'jpeg', quality: 1 },
     };
 
-    html2pdf().set(opt).from(printcontent.value).save();
-
-    await html2pdf(printcontent.value, opt);
-
-    invoiceContent.value.style.display = "none";
-
+    html2pdf().set(opt).from(printcontent.value).save()
+    
+    const result = await html2pdf(printcontent.value, opt).output();
+    
+    invoice.value = ""
+    
 }
 
 // Delete Session Storage
-function deleteSession() {
+function deleteSession() 
+{
     sessionStorage.clear();
-    router.push({ name: 'Home' })
+    router.push({name: 'Home'})
 }
 
-function sendEmail() {
-    const client = new SMTPClient({
-        user: 'developerzemfar@gmail.com',
-        password: 'DDB1488E2BCEFF15AA1F33A489B25E19DC8A',
-        host: 'smtp.elasticemail.com',
-        ssl: true,
-    });
+const form = ref(null)
 
-    // send the message and get a callback with an error or details of the message that was sent
-    client.send(
-        {
-            text: 'i hope this works',
-            from: 'you <developerzemfar@gmail.com>',
-            to: 'someone <developerzemfar@gmail.com>',
-            subject: 'testing emailjs',
-        },
-        (err, message) => {
-            console.log(err || message);
-        }
-    );
+function enquireNow() {
+
+    const orderSummary = {
+        username: props.data.name._value,
+        useremail: props.data.email._value,
+        userphone: props.data.phone._value,
+        products: cart.value.length,
+        capacity: cartCapacity.value,
+        cost: cartCost.value
+    }
+
+    sessionStorage.setItem('orderSummary', JSON.stringify(orderSummary));
+
+    router.push({ name: 'enquire-now', params: { id: props.data['userId'] } });    
 }
 </script>
 
@@ -342,7 +343,7 @@ function sendEmail() {
                                         fill="currentColor" />
                                 </svg>
                             </span>
-                            <span class="statistics--text--nav">{{ cartAnchor }}</span>
+                            <span class="statistics--text--nav">{{ cartCapacity }}</span>
                         </div>
                     </li>
                     <li class="fw-bold mx-2 nav-item">
@@ -395,19 +396,21 @@ function sendEmail() {
 
                 <div class="draggableItem" ref="draggableComponent" v-for="(draggable, index) in cart"
                     @mousedown="mousedown($event, index)">
-                    <img :src="`/media/` + draggable.path" class="w-100" style="transform: rotate(0deg);">
+
+                    <img :src="`/media/images/` + draggable.path" class="w-100" style="transform: rotate(0deg);">
                     <div class="actions">
-                        <button class="btn btn-sm btn-light" @click="rotateComponent(draggable, index, 'increment')">
-                            <font-awesome-icon icon="arrow-rotate-forward" />
+                        <button class="btn btn-sm btn-light" @click="rotateComponent($event, draggable, index, 'increment')">
+                            <font-awesome-icon icon="arrow-rotate-forward"/>
                         </button>
-                        <button class="btn btn-sm btn-light">
-                            <font-awesome-icon icon="arrow-rotate-backward"
-                                @click="rotateComponent(draggable, index, 'decrement')" />
+                        <button class="btn btn-sm btn-light backward" style="display: none" ref="decrement" @click="rotateComponent($event, draggable, index, 'decrement')">
+                            <font-awesome-icon icon="arrow-rotate-backward"/>
                         </button>
                         <button class="btn btn-sm btn-light" @click="removeCartItem(draggable, index)">
                             <font-awesome-icon icon="trash" />
                         </button>
+                        
                     </div>
+
                 </div>
             </div>
         </div>
@@ -429,20 +432,23 @@ function sendEmail() {
                     <div class="cards-grid">
                         <div v-for="product in productList" @mouseover="showProductDetail(product)"
                             @mouseleave="hideProductDetail(product)" @click="addToCart(product)" class="card products--bar--card">
+                            
                             <div class="card-img">
-                                <img :src="`/media/` + product.path" alt="product-img">
+                                <img :src="`/media/images/` + product.path" alt="product-img">
                                 <span v-if="product.count.value > 0"
                                     class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-danger mt-1">
                                     {{ product.count.value }}
                                 </span>
                             </div>
+
                             <div class="card-body">
-                                <h5 class="card-title">{{ product.name }}</h5>
+                                <h5 class="card-title text-white">{{ product.name }}</h5>
                                 <div class="d-flex justify-content-between align-content-center">
-                                    <p>{{ product.size }}</p>
-                                    <p>${{ Intl.NumberFormat().format(product.cost)}}</p>
+                                    <p class="text-white">{{ product.size }}</p>
+                                    <p class="text-white">${{ Intl.NumberFormat().format(product.cost)}}</p>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -457,16 +463,12 @@ function sendEmail() {
                                 <div class="card-body summary--bar--card--body">
                                     <div class="summary--bar--card--body--statistics">
                                         <div class="summary--bar--card--body--statistics--row">
-                                            <h5>FEATURE:</h5>
+                                            <h5>Products:</h5>
                                             <p>{{ cart.length }}</p>
                                         </div>
                                         <div class="summary--bar--card--body--statistics--row">
                                             <h5>CAPACITY:</h5>
                                             <p>{{ cartCapacity }}</p>
-                                        </div>
-                                        <div class="summary--bar--card--body--statistics--row">
-                                            <h5>ANCHORS:</h5>
-                                            <p>{{ cartAnchor }}</p>
                                         </div>
                                         <div class="summary--bar--card--body--statistics--row">
                                             <h5>TOTAL COST:</h5>
@@ -480,7 +482,7 @@ function sendEmail() {
                                         <div class="row g-0">
                                             <div class="col-md-3">
                                                 <div class="img--card">
-                                                    <img :src="`/media/` + item.path" alt="selected-product">
+                                                    <img :src="`/media/images/` + item.path" alt="selected-product">
                                                 </div>
                                             </div>
                                             <div class="col-md-9 cart-item-body">
@@ -496,8 +498,8 @@ function sendEmail() {
                                     </div>
                                 </div>
                                 <div class="card-footer summary--bar--card--footer">
-                                    <button class="btn btn--primary--custom--v2" @click="printThis()">
-                                        Print PDF
+                                    <button class="btn btn--primary--custom--v2" @click="enquireNow()">
+                                        Enquire Now
                                     </button>
                                 </div>
                             </div>
@@ -512,32 +514,28 @@ function sendEmail() {
                     <div class="card-detail popUp--card--detail">
                         <div class="row g-0">
                             <div class="col-md-8">
-                                <div class="card-body" style="padding: 20px;">
+                                <div class="card-body">
                                     <h5 class="card-title fw-bold">{{ productDetail.name }}</h5>
-    
-                                    <div style="display: flow-root">
-                                        <p class="float-start">Capacity:</p>
-                                        <p class="float-end">{{ productDetail.capacity }}</p>
+                                    <div class="popUp--card--detail--stats">
+                                        <p>Capacity:</p>
+                                        <p>{{ productDetail.capacity }}</p>
                                     </div>
-    
-                                    <div style="display: flow-root">
-                                        <p class="float-start">Size:</p>
-                                        <p class="float-end">{{ productDetail.size }}</p>
+                                    <div class="popUp--card--detail--stats">
+                                        <p>Size:</p>
+                                        <p>{{ productDetail.size }}</p>
                                     </div>
-    
-                                    <div style="display: flow-root">
-                                        <p class="float-start">Anchors:</p>
-                                        <p class="float-end">{{ productDetail.anchors }}</p>
-                                    </div>
-    
-                                    <div style="display: flow-root">
-                                        <p class="float-start">Cost:</p>
-                                        <p class="float-end">${{ productDetail.cost }}</p>
+                                    <!-- <div class="popUp--card--detail--stats">
+                                        <p>Anchors:</p>
+                                        <p>{{ productDetail.anchors }}</p>
+                                    </div> -->
+                                    <div class="popUp--card--detail--stats">
+                                        <p>Cost:</p>
+                                        <p>${{ productDetail.cost }}</p>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-4 card-detail-image">
-                                <img :src="`/media/` + productDetail.path" width="100" class="img-fluid rounded-start"
+                                <img :src="`/media/images/` + productDetail.path" width="100" class="img-fluid rounded-start"
                                     alt="...">
                             </div>
                         </div>
@@ -559,7 +557,6 @@ function sendEmail() {
     width: 100%;
     /* max-width: 800px; */
 }
-
 .draggableItem {
     position: absolute;
     color: #fff;
@@ -568,7 +565,6 @@ function sendEmail() {
     align-items: center;
     width: 100px;
 }
-
 .companyDetails {
     height: 200px;
     width: 120px;
@@ -577,22 +573,18 @@ function sendEmail() {
     border: 1px solid #878787;
     font-family: fantasy;
 }
-
 .project {
     display: flow-root;
     margin-left: 220px;
     font-family: fantasy;
     margin-top: 10px;
 }
-
 .text-code {
-    color: #0070bc;
+    color: #0070BC;
 }
-
 .fs-14 {
     font-size: 14px;
 }
-
 .actions {
     display: flex;
     position: sticky;
@@ -600,47 +592,40 @@ function sendEmail() {
     z-index: 9999;
     opacity: v-bind(opacity);
 }
-
 /* .menu {
     z-index: 999;
     display: flex;
     justify-content: end;
     float: right
 } */
-
 .card-img-top {
     width: 135px;
     padding: 10px;
 }
-
 .card {
     /* width: 180px; */
     border: none;
-    box-shadow: 1px 1px 8px #a1a1a1;
+    box-shadow: 1px 1px 8px #A1A1A1;
     position: sticky;
     margin: 5px;
 }
-/* 
+/*
 .card-title {
     font-size: 16px;
 }
-
 .card-text {
     font-size: 12px;
 } */
-
 /* .card-img {
     height: 175px;
     display: flex;
     align-items: center;
     justify-content: center;
 } */
-
 .card-body {
     padding-top: 0;
     padding-bottom: 0;
 }
-
 /* .card-list {
     justify-content: end;
     overflow-y: scroll;
@@ -650,13 +635,11 @@ function sendEmail() {
     right: 35px;
     top: 100px;
 } */
-
 .cards-grid {
     display: grid;
     /* grid-template-columns: 1fr 1fr; */
     grid-template-columns: 50% 50%;
 }
-
 /* .card-detail {
     width: 500px;
     font-family: sans-serif;
@@ -668,30 +651,30 @@ function sendEmail() {
     float: right;
     margin-top: 315px;
 } */
-
 .popUp--card {
-  width: 40vw;
-  font-family: sans-serif;
-  font-weight: bold;
-  font-size: 13px;
-  z-index: auto;
-  position: absolute;
-  right: 30vw;
-  margin-top: 0;
-  top: 11vh;
+    width: 40vw;
+    font-family: sans-serif;
+    font-weight: bold;
+    font-size: 13px;
+    z-index: auto;
+    position: absolute;
+    right: 30vw;
+    margin-top: 0;
+    top: 11vh;
+    border: 0;
+    border-radius: 0;
+    background: #000;
+    box-shadow: none !important;
 }
-
 .card-detail-image {
     display: grid;
     justify-content: center;
     align-items: center;
 }
-
 .cart-item-body {
     display: flex;
     align-items: center;
 }
-
 .btn-tab {
     border-bottom-left-radius: unset;
     border-bottom-right-radius: unset;
@@ -699,49 +682,38 @@ function sendEmail() {
     border-left: none;
     border-right: none;
 }
-
 /* .btn-tab-active {
-    border-bottom: 1px solid #4fbbee;
+    border-bottom: 1px solid #4FBBEE;
 } */
-
 .vdr.active:before {
     outline: 0px;
 }
-
 .fade-enter-from {
     opacity: 0;
     transform: translateY(-10px)
 }
-
 .fade-enter-to {
     opacity: 0;
     transform: translateY(0)
 }
-
 .fade-enter-active {
     transition: all 0.1s ease;
 }
-
-
 .transform-rotate {
     transform: v-bind(rotate)
 }
-
 /* width */
 ::-webkit-scrollbar {
     width: 5px;
 }
-
 /* Track */
 ::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: #F1F1F1;
 }
-
 /* Handle */
 ::-webkit-scrollbar-thumb {
-    background: #4fbbee;
+    background: #4FBBEE;
 }
-
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
     background: #555;
