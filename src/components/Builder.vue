@@ -243,33 +243,33 @@ async function printThis() {
         element.style.opacity = 0;
     });
 
-    invoice.value = "<div class='text-white bg-white'>\
+    invoice.value = "<div class='text-white' style='background: #000;height:8vh'>\
                         <div style='display: flow-root;margin-left: 220px;font-weight: 500;margin-top: 10px;'>\
                             <div class='d-flex float-start'>\
-                                <h5 class='text-dark'>Name:</h5>\
-                                <h5 class='text-code mx-2 fw-bold' style='color: #0070bc;'>"+props.data.name._value+"</h5>\
+                                <h5 class='' style='font-family: Oswald; font-size: 22px;  line-height: 22.1px; color: rgb(255, 255, 255);  letter-spacing: 1px;' >Name:</h5>\
+                                <h5 class='text-code mx-2' style='color: #fff; font-family: Avenir Next;'>"+ props.data.name._value + "</h5>\
                             </div>\
                             <div class='d-flex float-end'>\
-                                <h5 class='text-dark'>Date Drawn:</h5>\
-                                <h5 class='text-code mx-2 fw-bold' style='color: #0070bc;'>"+currentDateWithFormat+"</h5>\
+                                <h5 class='' style='font-family: Oswald; font-size: 22px;  line-height: 22.1px; color: rgb(255, 255, 255);  letter-spacing: 1px;'>Date Drawn:</h5>\
+                                <h5 class='text-code mx-2' style='color: #fff; font-family: Avenir Next;'>"+ currentDateWithFormat + "</h5>\
                             </div>\
                         </div>\
                     </div>\
-                    <div class='bg-white fw-bold' style='height: 220px;width: 130px;margin-left: 95px;position: absolute;border: 1px solid #878787;'>\
-                        <div style='border-bottom: 2px solid rgb(0 112 188);'>\
+                    <div class='' style='width: 160px;margin-left: 50px;position: absolute;border: 0; background: #000; padding: 15px;'>\
+                        <div style='border-bottom: 2px solid rgb(0 112 188);margin-bottom:15px'>\
                             <img width='100px' src='/media/logo.jpg'>\
                         </div>\
-                        <div>\
-                            <div class='text-dark  mb-1' style='font-size: 14px;'>Total Feature:</div>\
-                            <div class='text-code' style='color: #0070bc;font-size: 14px;'>"+cart.value.length+"</div>\
+                        <div style='margin-bottom:10px'>\
+                            <div class='mb-1' style='font-family: Oswald; font-size: 16px;  line-height: 22.1px; color: rgb(255, 255, 255);  letter-spacing: 1px;'>Total Feature:</div>\
+                            <div class='text-code' style='font-family: Avenir Next;font-size: 14px;font-weight: 800;line-height: 22.1px;color: rgb(255, 255, 255);letter-spacing: 1px;'>"+ cart.value.length + "</div>\
                         </div>\
-                        <div>\
-                            <div class='text-dark  mb-1' style='font-size: 14px;'>Total Capacity:</div>\
-                            <div class='text-code' style='color: #0070bc;font-size: 14px;'>"+cartCapacity.value+"</div>\
+                        <div style='margin-bottom:10px'>\
+                            <div class='mb-1' style='font-family: Oswald; font-size: 16px;  line-height: 22.1px; color: rgb(255, 255, 255);  letter-spacing: 1px;'>Total Capacity:</div>\
+                            <div class='text-code' style='font-family: Avenir Next;font-size: 14px;font-weight: 800;line-height: 22.1px;color: rgb(255, 255, 255);letter-spacing: 1px;'>"+ cartCapacity.value + "</div>\
                         </div>\
-                        <div>\
-                            <div class='text-dark  mb-1' style='font-size: 14px;'>Total Cost:</div>\
-                            <div class='mb-1 text-code' style='color: #0070bc;font-size: 14px;'>$"+cartCost.value+"</div>\
+                        <div style='margin-bottom:10px'>\
+                            <div class='mb-1' style='font-family: Oswald; font-size: 16px;  line-height: 22.1px; color: rgb(255, 255, 255);  letter-spacing: 1px;'>Total Cost:</div>\
+                            <div class='text-code' style='font-family: Avenir Next;font-size: 14px;font-weight: 800;line-height: 22.1px;color: rgb(255, 255, 255);letter-spacing: 1px;'>$"+ cartCost.value + "</div>\
                         </div>\
                     \</div>";
 
@@ -498,7 +498,7 @@ function enquireNow() {
                                     </div>
                                 </div>
                                 <div class="card-footer summary--bar--card--footer">
-                                    <button class="btn btn--primary--custom--v2" @click="enquireNow()">
+                                    <button class="btn btn--primary--custom--v2" @click="printThis()">
                                         Enquire Now
                                     </button>
                                 </div>
