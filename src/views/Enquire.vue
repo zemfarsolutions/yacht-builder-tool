@@ -184,7 +184,7 @@ const name = ref();
 const project_name = ref(orderSummary.project);
 const email = ref(orderSummary.user_email);
 const phone = ref(orderSummary.user_phone);
-const enquiry = ref('Lorem ipsum dolor, sit amet consectetur adipisicing elit. Et, maiores! Nam amet autem quasi suscipit praesentium delectus, laborum dolorem atque temporibus possimus at accusantium perferendis libero earum facere repellendus illum.');
+const enquiry = ref();
 
 async function sendEmail() {
     

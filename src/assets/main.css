@@ -2,13 +2,16 @@
    font-family: Avenir Next;
    src: url('../../font/AvenirNextLTPro-Regular.otf');
 }
+
 * {
    margin: 0;
    padding: 0;
 }
+
 html {
    overflow-x: hidden;
 }
+
 .top--bar--nav {
    max-height: 45px;
    text-align: center;
@@ -20,6 +23,7 @@ html {
    align-content: center;
    background: #1773B0;
 }
+
 .top--bar--nav h5 {
    font-family: "Oswald", sans-serif;
    font-size: 18.2px;
@@ -28,15 +32,18 @@ html {
    color: rgb(255, 255, 255);
    letter-spacing: 1px;
 }
+
 nav.navbar {
    background: #000;
    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
    padding: 0;
 }
+
 nav.navbar.height--fixed {
    height: 10vh;
    overflow: hidden;
 }
+
 nav.navbar .nav-link {
    line-height: calc(1 + 0.3 / 1.0);
    transition: text-decoration .1s ease;
@@ -48,6 +55,7 @@ nav.navbar .nav-link {
    letter-spacing: 0.6px;
    font-weight: 500;
 }
+
 nav.navbar .nav-link.active,
 nav.navbar .nav-link:hover {
    transition: text-decoration .1s ease;
@@ -56,6 +64,7 @@ nav.navbar .nav-link:hover {
    text-decoration: underline;
    text-underline-offset: 0.3rem;
 }
+
 nav.navbar .dropdown-menu {
    background: #000;
    padding: 1.4rem 0;
@@ -66,6 +75,7 @@ nav.navbar .dropdown-menu {
    border-width: 1px;
    box-shadow: 0px 4px 5px rgba(255, 255, 255, 0.0);
 }
+
 nav.navbar .dropdown-menu .dropdown-item {
    line-height: calc(1 + 0.3 / 1.0);
    text-decoration: none;
@@ -76,20 +86,25 @@ nav.navbar .dropdown-menu .dropdown-item {
    font-weight: 500;
    justify-content: space-between;
 }
+
 nav.navbar .dropdown-menu .dropdown-item:hover {
    color: rgba(255, 255, 255, 1) !important;
    background: transparent;
 }
+
 .main--logo--nav {
    max-width: 120px;
 }
+
 .main--logo--nav img {
    width: 100%;
 }
+
 .welcome--screen {
    height: 100vh;
    background: #000;
 }
+
 .welcome--screen--card {
    width: 100%;
    transform: translate(-50%, -50%);
@@ -98,17 +113,20 @@ nav.navbar .dropdown-menu .dropdown-item:hover {
    position: absolute;
    max-width: 600px;
 }
+
 .welcome--screen--card .card {
    background: #1F1F21;
    border: 0;
    border-radius: 0;
 }
+
 .welcome--screen--card .card .card-header {
    background: #1773B0;
    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
    text-align: center;
    border-radius: 0;
 }
+
 .welcome--screen--card .card .card-header .card-title {
    font-family: "Oswald", sans-serif;
    font-size: 24px;
@@ -123,12 +141,14 @@ nav.navbar .dropdown-menu .dropdown-item:hover {
    border: 0;
    border-radius: 0;
 }
+
 .welcome--screen--card--test .card .card-header {
    background: #1773B0;
    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-   text-align: center;
+   text-align: left;
    border-radius: 0;
 }
+
 .welcome--screen--card--test .card .card-header .card-title {
    font-family: "Oswald", sans-serif;
    font-size: 24px;
@@ -146,6 +166,7 @@ nav.navbar .dropdown-menu .dropdown-item:hover {
    letter-spacing: 1px;
    margin-bottom: 15px;
 }
+
 .welcome--screen--card--test .card .project--details .form-control {
    background: #000;
    border: 0;
@@ -156,6 +177,10 @@ nav.navbar .dropdown-menu .dropdown-item:hover {
    font-size: 16px;
 }
 
+.welcome--screen--card--test .card .project--details input[type=file] {
+   min-height: auto;
+}
+
 .welcome--screen--card .card .project--details .form-label {
    font-family: "Oswald", sans-serif;
    font-size: 18px;
@@ -164,6 +189,7 @@ nav.navbar .dropdown-menu .dropdown-item:hover {
    letter-spacing: 1px;
    margin-bottom: 15px;
 }
+
 .welcome--screen--card .card .project--details .form-control {
    background: #000;
    border: 0;
@@ -173,6 +199,7 @@ nav.navbar .dropdown-menu .dropdown-item:hover {
    font-family: "Avenir Next", sans-serif;
    font-size: 16px;
 }
+
 .btn--primary--custom,
 .btn--primary--custom--v2 {
    background: #0070BC;
@@ -187,29 +214,35 @@ nav.navbar .dropdown-menu .dropdown-item:hover {
    padding: 15px 25px;
    width: 100%;
 }
+
 .btn--primary--custom:hover {
    background: #000;
    color: #fff;
 }
+
 .btn--primary--custom--v2:hover {
    background: #1F1F21;
    color: #fff;
 }
+
 .statistics--summary {
    display: flex;
    align-items: center;
    justify-content: center;
 }
+
 .statistics--icon--nav {
    color: #1773B0;
    fill: #1773B0;
    margin-right: 10px;
 }
+
 .statistics--text--nav {
    font-family: 'Avenir Next', sans-serif;
    font-size: 18px;
    color: #fff;
 }
+
 /* .main--canvas {
    position: relative;
 } */
@@ -217,12 +250,15 @@ nav.navbar .dropdown-menu .dropdown-item:hover {
    display: grid;
    grid-template-columns: 70vw 30vw;
 }
+
 .main--canvas--ship {
    width: 400px;
    position: absolute;
-   left: 400px;
-   top: 235px;
+   left: 50%;
+   top: 60%;
+   transform: translate(-50%, -50%);
 }
+
 .side--bar {
    height: 90vh;
    overflow-y: scroll;
@@ -230,6 +266,7 @@ nav.navbar .dropdown-menu .dropdown-item:hover {
    background: #000;
    padding: 0px 15px;
 }
+
 .menu {
    margin: 5px 5px 15px 5px;
    background: #000;
@@ -237,6 +274,7 @@ nav.navbar .dropdown-menu .dropdown-item:hover {
    /* position: fixed; */
    /* z-index: 999; */
 }
+
 .sidebar--tab--selector {
    background: #141414;
    color: #fff !important;
@@ -250,6 +288,7 @@ nav.navbar .dropdown-menu .dropdown-item:hover {
    padding: 10px 25px;
    margin-right: 5px;
 }
+
 .sidebar--tab--selector--active {
    background: #0070BC;
    color: #fff !important;
@@ -263,6 +302,7 @@ nav.navbar .dropdown-menu .dropdown-item:hover {
    padding: 10px 25px;
    margin-right: 5px;
 }
+
 /* .products--bar,
 .summary--bar {
    margin-top: 50px;
@@ -273,9 +313,11 @@ nav.navbar .dropdown-menu .dropdown-item:hover {
    box-shadow: none !important;
    background: transparent !important;
 }
+
 .card-body.summary--bar--card--body {
    padding: 0 !important;
 }
+
 .card.summary--bar--card .summary--bar--card--footer {
    border: 0 !important;
    border-radius: 0 !important;
@@ -283,17 +325,20 @@ nav.navbar .dropdown-menu .dropdown-item:hover {
    background: transparent !important;
    padding: 0;
 }
+
 .summary--bar--card--body--statistics {
    padding: 15px;
    margin-bottom: 15px;
    background: #141414;
 }
+
 .summary--bar--card--body--statistics--row {
    display: flex;
    justify-content: space-between;
    align-items: center;
    margin-bottom: 15px;
 }
+
 .summary--bar--card--body--statistics h5 {
    font-family: "Oswald", sans-serif;
    font-size: 16px;
@@ -302,6 +347,7 @@ nav.navbar .dropdown-menu .dropdown-item:hover {
    color: rgb(255, 255, 255);
    letter-spacing: 1px;
 }
+
 .summary--bar--card--body--statistics p {
    font-family: "Avenir Next", sans-serif;
    font-size: 16px;
@@ -311,9 +357,11 @@ nav.navbar .dropdown-menu .dropdown-item:hover {
    letter-spacing: 1px;
    margin: 0;
 }
+
 .summary--bar--card--body--prod {
    margin: 0 0 15px 0 !important;
 }
+
 .card.summary--bar--card--body--prod {
    border: 0 !important;
    border-radius: 0 !important;
@@ -321,6 +369,7 @@ nav.navbar .dropdown-menu .dropdown-item:hover {
    background: #141414;
    padding: 15px;
 }
+
 .card.summary--bar--card--body--prod .card-title {
    font-family: "Oswald", sans-serif;
    font-size: 20px;
@@ -330,6 +379,7 @@ nav.navbar .dropdown-menu .dropdown-item:hover {
    letter-spacing: 1px;
    margin-bottom: 15px
 }
+
 .card.summary--bar--card--body--prod .card-text {
    font-family: "Avenir Next", sans-serif;
    font-size: 16px;
@@ -339,15 +389,18 @@ nav.navbar .dropdown-menu .dropdown-item:hover {
    letter-spacing: 1px;
    margin: 0;
 }
+
 .card.summary--bar--card--body--prod .img--card {
    min-height: 120px;
    display: flex;
    align-items: center;
    justify-content: start;
 }
+
 .card.summary--bar--card--body--prod img {
    width: 100%;
 }
+
 /* .card.summary--bar--card--body--prod .card-img img {
    width: 100%;
 } */
@@ -359,6 +412,7 @@ nav.navbar .dropdown-menu .dropdown-item:hover {
    position: relative !important;
    padding: 10px;
 }
+
 .card.products--bar--card .card-img {
    min-height: 180px;
    display: flex;
@@ -368,12 +422,15 @@ nav.navbar .dropdown-menu .dropdown-item:hover {
    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
    border-radius: 0;
 }
+
 .card.products--bar--card .card-img img {
    width: 100%;
 }
+
 .card.products--bar--card .card-body {
    padding: 0;
 }
+
 .card.products--bar--card .card-title {
    font-size: 16px;
    color: #fff;
@@ -384,6 +441,7 @@ nav.navbar .dropdown-menu .dropdown-item:hover {
    margin-bottom: 15px;
    text-align: center;
 }
+
 .card.products--bar--card .card-body {
    color: rgb(255, 255, 255);
    font-family: "Avenir Next", sans-serif;
@@ -392,9 +450,11 @@ nav.navbar .dropdown-menu .dropdown-item:hover {
    letter-spacing: 1px;
    line-height: 18px;
 }
+
 .card-detail.popUp--card--detail .card-body {
    padding: 15px;
 }
+
 .card-detail.popUp--card--detail .card-title {
    font-size: 22px;
    color: #fff;
@@ -404,12 +464,14 @@ nav.navbar .dropdown-menu .dropdown-item:hover {
    line-height: 18px;
    margin-bottom: 30px;
 }
+
 .popUp--card--detail--stats {
    display: flex;
    justify-content: space-between;
    align-items: center;
    margin-bottom: 8px;
 }
+
 .popUp--card--detail--stats p {
    font-family: "Avenir Next", sans-serif;
    font-size: 16px;
