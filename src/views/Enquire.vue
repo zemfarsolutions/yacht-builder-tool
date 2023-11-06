@@ -1,7 +1,7 @@
 <template>
     <nav class="navbar navbar-dark navbar-expand-lg height--fixed">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">
+            <a class="navbar-brand" href="http://yachtbuilder.wetestlink.com">
                 <div class="main--logo--nav">
                     <img src="/public/media/logo/log2.png" alt="Aqua Club Logo">
                 </div>

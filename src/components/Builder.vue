@@ -37,8 +37,9 @@ const productList = [
         capacity: 10,
         size: '4x3m',
         cost: 4995,
-        rotate: ref(0),
-        count: ref(0)
+        rotate: ref(180),
+        count: ref(0),
+        width: ref(80)
     },
     {
         id: 2,
@@ -48,7 +49,8 @@ const productList = [
         size: '5x3m',
         cost: 5199,
         rotate: ref(0),
-        count: ref(0)
+        count: ref(0),
+        width: ref(90)
     },
     {
         id: 3,
@@ -58,7 +60,8 @@ const productList = [
         size: '3x2m',
         cost: 3144,
         rotate: ref(0),
-        count: ref(0)
+        count: ref(0),
+        width: ref(63)
     },
     {
         id: 4,
@@ -68,7 +71,8 @@ const productList = [
         size: '4x2m',
         cost: 2599,
         rotate: ref(0),
-        count: ref(0)
+        count: ref(0),
+        width: ref(67)
     },
     {
         id: 5,
@@ -78,7 +82,8 @@ const productList = [
         size: '1.4x1m',
         cost: 4122,
         rotate: ref(0),
-        count: ref(0)
+        count: ref(0),
+        width: ref(38)
     },
     {
         id: 6,
@@ -87,8 +92,9 @@ const productList = [
         capacity: 7,
         size: '5x4m',
         cost: 4122,
-        rotate: ref(0),
-        count: ref(0)
+        rotate: ref(90),
+        count: ref(0),
+        width: ref(120)
     }
 ];
 
@@ -314,7 +320,7 @@ async function enquireNow() {
 <template>
     <nav class="navbar navbar-dark navbar-expand-lg height--fixed">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">
+            <a class="navbar-brand" href="https://yachtbuilder.wetestlink.com">
                 <div class="main--logo--nav">
                     <img src="/public/media/logo/log2.png" alt="Aqua Club Logo">
                 </div>
@@ -400,13 +406,18 @@ async function enquireNow() {
             <div class="draggableItems" ref="printcontent">
 
                 <div class="row" v-html="invoice" ref="invoiceContent"> </div>
-
-                <img src="/media/canvas-ship.png" alt="main-canvas-ship" class="main--canvas--ship">
+                <div class="image--table">
+                    <div class="image--table--row">
+                        <img src="/media/canvas-ship.png" alt="main-canvas-ship" class="main--canvas--ship">
 
                 <div class="draggableItem" ref="draggableComponent" v-for="(draggable, index) in cart"
                     @mousedown="mousedown($event, index)">
 
-                    <img :src="`/media/images/` + draggable.path" class="w-100" style="transform: rotate(0deg);">
+                    <img 
+                    :src="`/media/images/` + draggable.path" 
+                    class="" 
+                    :style="'transform: rotate('+draggable.rotate+'deg);width:'+draggable.width+'px;'">
+
                     <div class="actions">
                         <button class="btn btn-sm btn-light" @click="rotateComponent($event, draggable, index, 'increment')">
                             <font-awesome-icon icon="arrow-rotate-forward"/>
@@ -420,6 +431,9 @@ async function enquireNow() {
                         
                     </div>
 
+                </div>
+
+                                    </div>
                 </div>
             </div>
         </div>
@@ -443,7 +457,9 @@ async function enquireNow() {
                             @mouseleave="hideProductDetail(product)" @click="addToCart(product)" class="card products--bar--card">
                             
                             <div class="card-img">
-                                <img :src="`/media/images/` + product.path" alt="product-img">
+                                <img 
+                                :src="`/media/images/` + product.path" alt="product-img" 
+                                :style="'transform: rotate('+product.rotate.value+'deg)'">
                                 <span v-if="product.count.value > 0"
                                     class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-danger mt-1">
                                     {{ product.count.value }}
@@ -559,12 +575,13 @@ async function enquireNow() {
 .draggableItems {
     /* height: 550px; */
     height: 90vh;
-    background: url('/media/canvas-bg.jpg');
+    background: url('/media/canvas-bg.webp');
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center center;
     width: 100%;
     /* max-width: 800px; */
+
 }
 .draggableItem {
     position: absolute;

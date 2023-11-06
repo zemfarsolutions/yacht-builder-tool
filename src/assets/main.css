@@ -254,10 +254,18 @@ nav.navbar .dropdown-menu .dropdown-item:hover {
 .main--canvas--ship {
    width: 400px;
    position: absolute;
+   left: 250px;
+   top: 120px;
+   transform: rotate(-90deg);
+}
+/* 
+.main--canvas--ship {
+   width: 400px;
+   position: absolute;
    left: 50%;
    top: 60%;
    transform: translate(-50%, -50%);
-}
+} */
 
 .side--bar {
    height: 90vh;
@@ -481,3 +489,16 @@ nav.navbar .dropdown-menu .dropdown-item:hover {
    letter-spacing: 1px;
    margin: 0;
 }
+
+/* 
+.image--table {
+       width: 100%;
+    height: 100%;
+    display: table;
+    text-align: end;
+}
+
+.image--table--row {
+   display: table-cell;
+    vertical-align: middle;
+} */

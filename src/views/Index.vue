@@ -11,7 +11,7 @@
                                 <h5 class="card-title text-code">User Information</h5>
                             </div>
                             <div class="card-body">
-                                <form @submit="saveDataToSessionStorage" class="project--details">
+                                <form @submit.prevent="saveDataToSessionStorage" class="project--details">
                                     <div class="row mb-4 g-3">
                                         <div class="col-sm-12">
                                             <label for="project-name" class="form-label">Project Name</label>
@@ -47,6 +47,7 @@ import { ref, onMounted } from 'vue';
 import Nav from '../components/Nav.vue'
 import router from '../router';
 import CryptoJS from 'crypto-js';
+import  emailjs  from '@emailjs/browser';
 
 const el = ref();
 const name = ref();
@@ -61,7 +62,21 @@ onMounted(() => {
     }
 })
 
-function saveDataToSessionStorage() {
+async function saveDataToSessionStorage() {
+    console.log('xyz')
+    let parameters = {
+        name: name.value,
+        email: email.value,
+        phone: phone.value,
+    }
+
+    await emailjs.send('service_1ta48fh', 'template_aqcu7ch', parameters, 'sRg667CP8QejTZBD7')
+                .then((result) => {
+                    console.log('SUCCESS!', result.text);
+                }, (error) => {
+                    console.log('FAILED...', error.text);
+                });
+
     const userInput = {
         userId: CryptoJS.AES.encrypt(email.value, 'password').toString(),
         name: name,
