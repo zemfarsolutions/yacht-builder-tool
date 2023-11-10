@@ -296,7 +296,7 @@ async function enquireNow() {
 
     html2pdf().set(opt).from(printcontent.value).save()
     
-    const result = await html2pdf(printcontent.value, opt);
+    await html2pdf(printcontent.value, opt);
     
     invoice.value = ""
 
@@ -322,7 +322,7 @@ async function enquireNow() {
         <div class="container-fluid">
             <a class="navbar-brand" href="https://yachtbuilder.wetestlink.com">
                 <div class="main--logo--nav">
-                    <img src="/public/media/logo/log2.png" alt="Aqua Club Logo">
+                    <img src="/media/logo/log2.png" alt="Aqua Club Logo">
                 </div>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"

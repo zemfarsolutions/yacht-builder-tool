@@ -48,6 +48,8 @@ import Nav from '../components/Nav.vue'
 import router from '../router';
 import CryptoJS from 'crypto-js';
 import  emailjs  from '@emailjs/browser';
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
 
 const el = ref();
 const name = ref();
@@ -63,14 +65,18 @@ onMounted(() => {
 })
 
 async function saveDataToSessionStorage() {
-    console.log('xyz')
+
     let parameters = {
         name: name.value,
         email: email.value,
         phone: phone.value,
     }
 
-    await emailjs.send('service_1ta48fh', 'template_aqcu7ch', parameters, 'sRg667CP8QejTZBD7')
+    toast("You're Awesome, Welcome.", {
+        autoClose: 1000,
+    });
+
+    await emailjs.send('service_af65zy8', 'template_85fea0r', parameters, 'wnlr_jL0yvvoQfRH7')
                 .then((result) => {
                     console.log('SUCCESS!', result.text);
                 }, (error) => {

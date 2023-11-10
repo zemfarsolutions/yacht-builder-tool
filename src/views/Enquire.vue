@@ -3,7 +3,7 @@
         <div class="container-fluid">
             <a class="navbar-brand" href="http://yachtbuilder.wetestlink.com">
                 <div class="main--logo--nav">
-                    <img src="/public/media/logo/log2.png" alt="Aqua Club Logo">
+                    <img src="/media/logo/log2.png" alt="Aqua Club Logo">
                 </div>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
@@ -99,7 +99,7 @@
                                         </div>
                                         <div class="col-sm-12">
                                             <label for="attachment" class="form-label">Attachment</label>
-                                            <input type="file" class="form-control" id="attachment">
+                                            <input type="file" class="form-control" id="attachment" ref="attachment">
                                             <div id="attachment" class="form-text text-white">Select the PDF just downloaded on your device.</div>
                                         </div>
                                         <div class="col-sm-6">
@@ -139,7 +139,7 @@
                                             </div>
                                         </div>
 
-                                        <div v-for="(item, index) in orderSummary.products" class="card summary--bar--card--body--prod">
+                                        <div v-for="(item) in orderSummary.products" :key="item.id" class="card summary--bar--card--body--prod">
                                             <div class="row g-0">
                                                 <div class="col-md-3">
                                                     <div class="img--card">
@@ -185,6 +185,7 @@ const project_name = ref(orderSummary.project);
 const email = ref(orderSummary.user_email);
 const phone = ref(orderSummary.user_phone);
 const enquiry = ref();
+const attachment = ref();
 
 async function sendEmail() {
     
@@ -196,7 +197,7 @@ async function sendEmail() {
         });
 
     }else{
-
+        let img_base64  = await convertImageToBase64(attachment.value.files[0])
         var params = {
             name: name.value,
             email: email.value,
@@ -205,14 +206,15 @@ async function sendEmail() {
             project_name: project_name.value,
             number_of_products: orderSummary.totalProducts,
             capacity: orderSummary.capacity,
-            total_cost: orderSummary.cost
+            total_cost: orderSummary.cost,
+            attachment: img_base64
         };
-    
+        
         toast("Great! Thanks for your order.", {
             autoClose: 1000,
         });
 
-        await emailjs.send('service_1ta48fh', 'template_aftj664', params, 'sRg667CP8QejTZBD7')
+        await emailjs.send('service_af65zy8', 'template_ku0wlun', params, 'wnlr_jL0yvvoQfRH7')
                 .then((result) => {
                     console.log('SUCCESS!', result.text);
                 }, (error) => {
@@ -229,4 +231,15 @@ function goBack(){
     sessionStorage.clear();
     router.push({ name: 'Home'}); 
 }
+
+const convertImageToBase64 = async (image) => {
+  return await imageToBase64(image);
+}
+
+const imageToBase64 = image => new Promise((resolve, reject) => {
+  const reader = new FileReader();
+  reader.readAsDataURL(image);
+  reader.onload = () => resolve(reader.result);
+  reader.onerror = error => reject(error);
+});
 </script>
