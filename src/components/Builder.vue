@@ -142,7 +142,7 @@ const decrement = ref(null)
 // live summary info update
 watch(
   () => cart,
-  (newValue, oldValue) => {    
+  (newValue) => {    
         cartCost.value = newValue.value.reduce((sum, item) => {
             return sum + item.cost
         }, 0);
@@ -248,8 +248,6 @@ function deleteSession()
     router.push({name: 'Home'})
 }
 
-const form = ref(null)
-
 async function enquireNow() {
 
     let actions = document.getElementsByClassName('actions');
@@ -318,7 +316,7 @@ async function enquireNow() {
 
 
 <template>
-    <nav class="navbar navbar-dark navbar-expand-lg height--fixed">
+    <nav class="navbar probdone navbar-dark navbar-expand-lg height--fixed">
         <div class="container-fluid">
             <a class="navbar-brand" href="https://yachtbuilder.wetestlink.com">
                 <div class="main--logo--nav">
@@ -401,7 +399,7 @@ async function enquireNow() {
         </div>
     </nav>
 
-    <section class="main--canvas--body" style="width: 100vw;">
+    <section class="main--canvas--body probdone" style="width: 100vw;">
         <div class="main">
             <div class="draggableItems" ref="printcontent">
 
@@ -438,7 +436,7 @@ async function enquireNow() {
             </div>
         </div>
 
-        <aside class="side--bar">
+        <aside class="side--bar probdone">
             <div class="menu">
                 <button @click="changeMenu('products')"
                     :class="currentTab === 0 ? `btn sidebar--tab--selector--active` : 'btn sidebar--tab--selector'">
@@ -450,7 +448,7 @@ async function enquireNow() {
                 </button>
             </div>
 
-            <div v-show="products" class="products--bar">
+            <div v-show="products" class="products--bar probdone">
                 <div class="card-list">
                     <div class="cards-grid">
                         <div v-for="product in productList" @mouseover="showProductDetail(product)"
@@ -479,7 +477,7 @@ async function enquireNow() {
                 </div>
             </div>
 
-            <div v-show="summary" class="summary--bar">
+            <div v-show="summary" class="summary--bar probdone">
                 <div class="card-list summary--bar--card--list">
                     <!-- <div class="col-md-4"> -->
                     <div class="card summary--bar--card">

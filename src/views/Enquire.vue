@@ -214,7 +214,7 @@ async function sendEmail() {
             autoClose: 1000,
         });
 
-        await emailjs.send('service_af65zy8', 'template_ku0wlun', params, 'wnlr_jL0yvvoQfRH7')
+        await emailjs.send('service_mur4r3c', 'template_ku0wlun', params, 'wnlr_jL0yvvoQfRH7')
                 .then((result) => {
                     console.log('SUCCESS!', result.text);
                 }, (error) => {

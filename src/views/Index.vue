@@ -1,11 +1,11 @@
 <template>
     <Nav />
 
-    <div class="welcome--screen">
+    <div class="welcome--screen probdone">
         <div class="container" ref="el">
             <div class="row justify-content-center">
                 <div class="col-md-6">
-                    <div class="welcome--screen--card">
+                    <div class="welcome--screen--card probdone">
                         <div class="card border-0">
                             <div class="card-header">
                                 <h5 class="card-title text-code">User Information</h5>
@@ -76,7 +76,7 @@ async function saveDataToSessionStorage() {
         autoClose: 1000,
     });
 
-    await emailjs.send('service_af65zy8', 'template_85fea0r', parameters, 'wnlr_jL0yvvoQfRH7')
+    await emailjs.send('service_mur4r3c', 'template_85fea0r', parameters, 'wnlr_jL0yvvoQfRH7')
                 .then((result) => {
                     console.log('SUCCESS!', result.text);
                 }, (error) => {

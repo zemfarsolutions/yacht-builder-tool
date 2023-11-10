@@ -1,13 +1,13 @@
 <template>
-    <div class="sticky-nav" style="position: fixed; width: 100vw;">        
+    <div class="sticky-nav probdone" style="position: fixed; width: 100vw;">        
         <div class="top--bar--nav">
             <h5 class="notice--top--bar">
                 FREE SHIPPING ON ALL ORDERS
             </h5>
         </div>
-        <nav class="navbar navbar-expand-lg navbar-dark">
+        <nav class="navbar probdone navbar-expand-lg navbar-dark">
             <div class="container-fluid">
-                <a class="navbar-brand" href="https://yachtbuilder.wetestlink.com">
+                <a class="navbar-brand" href="https://dockconfigurator.aquaclub.com.au/">
                     <div class="main--logo--nav">
                         <img src="/media/logo/log2.png" alt="Aqua Club Logo">
                     </div>
